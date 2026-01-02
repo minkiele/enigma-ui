@@ -14,12 +14,13 @@ import { useEnigma } from "./Enigma.utils";
 import type { TypeSelectorProps } from "../TypeSelector/TypeSelector.models";
 import type { BaseReflectorProps } from "../WiredWheel/components/BaseReflector/BaseReflector.models";
 import ThinRotor from "../WiredWheel/ThinRotor/ThinRotor";
-import type { RotorIdentifier, RotorState } from "./Enigma.models";
+import type { RotorIdentifier } from "./Enigma.models";
 import PlugBoard from "../Plugboard/PlugBoard";
 import type { PlugBoardProps } from "../Plugboard/PlugBoard.models";
 import type { BaseRotorProps } from "../WiredWheel/components/BaseRotor/BaseRotor.models";
 import Keyboard from "../Keyboard/Keyboard";
 import type { KeyboardProps } from "../Keyboard/Keyboard.models";
+import classNames from "classnames";
 
 const Enigma: FC = () => {
   const {
@@ -37,40 +38,23 @@ const Enigma: FC = () => {
     wirings,
     addPlugBoardWiring,
     removePlugBoardWiring,
+    input,
     output,
     encode,
+    clear,
   } = useEnigma();
 
   const handleChangeType: TypeSelectorProps["onChangeType"] = (_, type) => {
     setMachineType(type);
   };
 
-  const handleChangeReflector: BaseReflectorProps["onChangeType"] = (
-    _,
-    type
-  ) => {
+  const handleChangeReflector: BaseReflectorProps<
+    ReflectorType | ThinReflectorType
+  >["onChangeType"] = (_, type) => {
     setReflectorType(type);
   };
 
   const rotorColsAttrs = { xs: 12, md: type === "M3" ? 4 : 3 };
-
-  const reflectorSuccessCols = {
-    bg: reflector != null ? "success" : undefined,
-    text: reflector != null ? "success" : undefined,
-  };
-
-  const getRotorSuccessCol = (
-    rotor: RotorState<RotorType | ThinRotorType> | undefined
-  ) => {
-    const isSuccess =
-      rotor?.type != null &&
-      rotor.ringPosition != null &&
-      rotor.windowLetter != null;
-    return {
-      bg: isSuccess != null ? "success" : undefined,
-      text: isSuccess != null ? "success" : undefined,
-    };
-  };
 
   const getUsedRotors = (exclude: RotorIdentifier) => {
     const usedRotors: Array<RotorType> = [];
@@ -130,39 +114,45 @@ const Enigma: FC = () => {
 
   return (
     <div className="enigmaUI">
-      <Card bg="info" text="info">
+      <Card className="border-info mb-3">
+        <Card.Header>Machine type</Card.Header>
         <Card.Body>
-          <Card.Title>Machine type</Card.Title>
           <TypeSelector type={type} onChangeType={handleChangeType} />
         </Card.Body>
       </Card>
       <div className="enigmaConfiguration">
-        <Card {...reflectorSuccessCols}>
+        <Card
+          className={classNames("mb-3", {
+            "border-success": reflector != null,
+          })}
+        >
+          <Card.Header>
+            {type === "M3" ? "Reflector" : "Thin reflector"}
+          </Card.Header>
           <Card.Body>
-            <Card.Title>
-              {type === "M3" ? "Reflector" : "Thin reflector"}
-            </Card.Title>
             {type === "M3" ? (
               <Reflector
-                type={reflector as ReflectorType}
+                value={reflector as ReflectorType}
                 onChangeType={handleChangeReflector}
               />
             ) : (
               <ThinReflector
-                type={reflector as ThinReflectorType}
+                value={reflector as ThinReflectorType}
                 onChangeType={handleChangeReflector}
               />
             )}
           </Card.Body>
         </Card>
-        <Row>
+        <Row className="mb-3">
           {type === "M4" && (
-            <Col {...rotorColsAttrs}>
-              <Card {...getRotorSuccessCol(fourthRotor)}>
+            <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
+              <Card
+                className={classNames({ "border-success": fourthRotor?.type })}
+              >
+                <Card.Header>Fourth Rotor</Card.Header>
                 <Card.Body>
-                  <Card.Title>Fourth Rotor</Card.Title>
                   <ThinRotor
-                    type={fourthRotor?.type}
+                    value={fourthRotor?.type}
                     ringPosition={fourthRotor?.ringPosition}
                     windowLetter={fourthRotor?.windowLetter}
                     onChangeRotorType={handleChangeRotorType("fourth")}
@@ -175,12 +165,12 @@ const Enigma: FC = () => {
               </Card>
             </Col>
           )}
-          <Col {...rotorColsAttrs}>
-            <Card {...getRotorSuccessCol(leftRotor)}>
+          <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
+            <Card className={classNames({ "border-success": leftRotor?.type })}>
+              <Card.Header>Left Rotor</Card.Header>
               <Card.Body>
-                <Card.Title>Left Rotor</Card.Title>
                 <Rotor
-                  type={leftRotor?.type}
+                  value={leftRotor?.type}
                   ringPosition={leftRotor?.ringPosition}
                   windowLetter={leftRotor?.windowLetter}
                   onChangeRotorType={handleChangeRotorType("left")}
@@ -191,12 +181,14 @@ const Enigma: FC = () => {
               </Card.Body>
             </Card>
           </Col>
-          <Col {...rotorColsAttrs}>
-            <Card {...getRotorSuccessCol(centerRotor)}>
+          <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
+            <Card
+              className={classNames({ "border-success": centerRotor?.type })}
+            >
+              <Card.Header>Center Rotor</Card.Header>
               <Card.Body>
-                <Card.Title>Center Rotor</Card.Title>
                 <Rotor
-                  type={centerRotor?.type}
+                  value={centerRotor?.type}
                   ringPosition={centerRotor?.ringPosition}
                   windowLetter={centerRotor?.windowLetter}
                   onChangeRotorType={handleChangeRotorType("center")}
@@ -208,11 +200,13 @@ const Enigma: FC = () => {
             </Card>
           </Col>
           <Col {...rotorColsAttrs}>
-            <Card {...getRotorSuccessCol(rightRotor)}>
+            <Card
+              className={classNames({ "border-success": rightRotor?.type })}
+            >
+              <Card.Header>Right Rotor</Card.Header>
               <Card.Body>
-                <Card.Title>Right Rotor</Card.Title>
                 <Rotor
-                  type={rightRotor?.type}
+                  value={rightRotor?.type}
                   ringPosition={rightRotor?.ringPosition}
                   windowLetter={rightRotor?.windowLetter}
                   onChangeRotorType={handleChangeRotorType("right")}
@@ -225,9 +219,9 @@ const Enigma: FC = () => {
           </Col>
         </Row>
       </div>
-      <Card bg="info" text="info">
+      <Card className="border-info mb-3">
+        <Card.Header>Plug board</Card.Header>
         <Card.Body>
-          <Card.Title>Plug board</Card.Title>
           <PlugBoard
             wirings={wirings}
             onAddWiring={handleAddPlugBoardWiring}
@@ -236,11 +230,13 @@ const Enigma: FC = () => {
         </Card.Body>
       </Card>
       <Card>
+        <Card.Header>Keyboard</Card.Header>
         <Card.Body>
-          <Card.Title>Keyboard</Card.Title>
           <Keyboard
+            input={input}
+            output={output}
             onInput={handleInput}
-            lastEncodedLetter={output.charAt(output.length - 1)}
+            onReset={clear}
           />
         </Card.Body>
       </Card>

@@ -1,8 +1,9 @@
-import { createElement } from "react";
 import type { ThinReflectorType } from "../../../models";
+import type { BaseReflectorProps } from "../components/BaseReflector/BaseReflector.models";
 
-export const renderThinReflectorTypes = (
+export const reflectorTypes = (
   ["Thin B", "Thin C"] satisfies Array<ThinReflectorType>
-).map((rotorType) =>
-  createElement("option", { key: rotorType, value: rotorType }, rotorType)
-);
+).map((rotorType) => ({
+  value: rotorType,
+  label: rotorType,
+})) satisfies BaseReflectorProps<ThinReflectorType>["options"];

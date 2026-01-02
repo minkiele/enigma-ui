@@ -1,15 +1,17 @@
-import { useId, type FC } from "react";
+import { useId, type ChangeEventHandler } from "react";
 import type { BaseReflectorProps } from "./BaseReflector.models";
 import { Form } from "react-bootstrap";
+import type { ReflectorType, ThinReflectorType } from "../../../../models";
 
-export const INITIAL_REFLECTOR_TYPE = "";
-
-const BaseReflector: FC<BaseReflectorProps> = ({
-  type = INITIAL_REFLECTOR_TYPE,
+const BaseReflector = <T extends ReflectorType | ThinReflectorType>({
+  value,
+  options,
   onChangeType,
-  children,
-}) => {
+}: BaseReflectorProps<T>) => {
   const id = useId();
+  const handleChangeType: ChangeEventHandler<HTMLSelectElement> = (evt) => {
+    onChangeType(evt, evt.target.value as T);
+  };
   return (
     <div className="enigmaReflector">
       <div className="enigmaReflectorType">
@@ -17,13 +19,15 @@ const BaseReflector: FC<BaseReflectorProps> = ({
           <Form.Label>Type</Form.Label>
           <Form.Select
             className="select"
-            value={type}
-            onChange={(evt) => {
-              onChangeType(evt, evt.target.value);
-            }}
+            value={value ?? ""}
+            onChange={handleChangeType}
           >
-            <option value="">Choose a reflector</option>
-            {children}
+            {value == null && <option value="">Choose a reflector</option>}
+            {options.map(({ value, label }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
           </Form.Select>
         </Form.Group>
       </div>

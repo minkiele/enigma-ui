@@ -1,38 +1,23 @@
-import { useEffect, useState, type ChangeEvent, type FC } from "react";
+import { useId, useState, type ChangeEventHandler, type FC, type MouseEventHandler } from "react";
 import type { KeyboardProps } from "./Keyboard.models";
-import { initialState } from "./Keyboard.utils";
 import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { DEFAULT_GROUP_BY } from "./Keyboard.utils";
 
-const Keyboard: FC<KeyboardProps> = ({ lastEncodedLetter, onInput }) => {
-  const [
-    { groupBy, input, inputLetter, output, pendingInputLetter },
-    setState,
-  ] = useState(initialState);
-  const resetState = () => {
-    setState(initialState);
+const Keyboard: FC<KeyboardProps> = ({ input, output, onInput, onReset }) => {
+
+  const inputId = useId();
+  const groupById = useId();
+
+  const [groupBy, setGroupBy] = useState(DEFAULT_GROUP_BY);
+  const resetState: MouseEventHandler<HTMLButtonElement> = (evt) => {
+    setGroupBy(DEFAULT_GROUP_BY);
+    onReset?.(evt);
   };
 
-  const updateInput = (evt: ChangeEvent<HTMLInputElement>, value: string) => {
-    const normalizedValue = normalizeInput(value);
-    setState((state) => ({
-      ...state,
-      inputLetter: "",
-      pendingInputLetter: normalizedValue,
-    }));
-    onInput(evt, value);
+  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (evt) => {
+    onInput(evt, normalizeInput(evt.target.value));
   };
-
-  useEffect(() => {
-    if (pendingInputLetter) {
-      setState(({ input, output, pendingInputLetter, ...oldState }) => ({
-        ...oldState,
-        pendingInputLetter: "",
-        input: lastEncodedLetter ? `${input}${pendingInputLetter}` : input,
-        output: lastEncodedLetter ? `${output}${lastEncodedLetter}` : output,
-      }));
-    }
-  }, [pendingInputLetter, lastEncodedLetter]);
 
   const getGroupedLetters = (letters: string) => {
     let output = "";
@@ -44,13 +29,10 @@ const Keyboard: FC<KeyboardProps> = ({ lastEncodedLetter, onInput }) => {
 
   const isGroupBy = groupBy > 0;
 
-  const updateGroupBy = (value: string) => {
-    const nval = parseInt(value);
+  const handleChangeGroupBy: ChangeEventHandler<HTMLInputElement> = (evt) => {
+    const nval = parseInt(evt.target.value);
     if (nval >= 0) {
-      setState((state) => ({
-        ...state,
-        groupBy: nval,
-      }));
+      setGroupBy(nval);
     }
   };
 
@@ -58,20 +40,14 @@ const Keyboard: FC<KeyboardProps> = ({ lastEncodedLetter, onInput }) => {
     <div className="keyboard">
       <Row>
         <Col className="keyboardInput" xs={12} md={2}>
-          <Form.Group>
+          <Form.Group controlId={inputId}>
             <div className={output.length ? "input-group" : undefined}>
               <Form.Control
                 type="text"
-                value={inputLetter}
-                onChange={(evt) => {
-                  updateInput(
-                    evt as ChangeEvent<HTMLInputElement>,
-                    evt.target.value
-                  );
-                }}
+                value=""
+                onChange={handleChangeInput}
                 maxLength={1}
                 pattern="[A-Z]"
-                size="sm"
                 placeholder="Input"
               />
               <span className={output.length ? "input-group-btn" : "hidden"}>
@@ -93,14 +69,12 @@ const Keyboard: FC<KeyboardProps> = ({ lastEncodedLetter, onInput }) => {
       </Row>
       <Row>
         <Col className="keyboardOutput" xs={12} md={2}>
-          <Form.Group className="splitSize">
+          <Form.Group className="splitSize" controlId={groupById}>
             <label>Group output by</label>
             <Form.Control
               type="number"
               value={groupBy}
-              onChange={(evt) => {
-                updateGroupBy(evt.target.value);
-              }}
+              onChange={handleChangeGroupBy}
             />
           </Form.Group>
         </Col>

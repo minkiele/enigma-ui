@@ -54,6 +54,7 @@ interface EnigmaActions {
   addPlugBoardWiring: (wiring: PlugBoardWiring) => void;
   removePlugBoardWiring: (wiring: PlugBoardWiring) => void;
   update: (data: EnigmaUpdateData) => void;
+  clear: () => void;
 }
 
 export type EnigmaStore = EnigmaState & EnigmaActions;

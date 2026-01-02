@@ -1,34 +1,18 @@
 import { useMemo, type FC } from "react";
 import type { RotorProps } from "./Rotor.models";
 import BaseRotor from "../components/BaseRotor/BaseRotor";
-import type { RotorType } from "../../../models";
+import { rotorTypes } from "./Rotor.utils";
 
 const Rotor: FC<RotorProps> = ({ usedRotors, ...props }) => {
-  const choices = useMemo(
+  const options = useMemo(
     () =>
-      (
-        [
-          "I",
-          "II",
-          "III",
-          "IV",
-          "V",
-          "VI",
-          "VII",
-          "VIII",
-        ] satisfies Array<RotorType>
-      ).map((rotorType) => (
-        <option
-          key={rotorType}
-          value={rotorType}
-          disabled={usedRotors.includes(rotorType)}
-        >
-          {rotorType}
-        </option>
-      )),
+      rotorTypes.map((option) => ({
+        ...option,
+        disabled: usedRotors.includes(option.value),
+      })),
     [usedRotors]
   );
-  return <BaseRotor {...props}>{choices}</BaseRotor>;
+  return <BaseRotor {...props} options={options} />;
 };
 
 export default Rotor;

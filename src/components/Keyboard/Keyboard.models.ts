@@ -1,14 +1,8 @@
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, MouseEventHandler } from "react";
 
 export interface KeyboardProps {
-  lastEncodedLetter: string;
-  onInput: (evt: ChangeEvent<HTMLInputElement>, input: string) => void;
-}
-
-export interface KeyboardState {
-  inputLetter: string;
   input: string;
   output: string;
-  pendingInputLetter: string;
-  groupBy: number;
+  onInput: (evt: ChangeEvent<HTMLInputElement>, input: string) => void;
+  onReset?: MouseEventHandler<HTMLButtonElement>;
 }

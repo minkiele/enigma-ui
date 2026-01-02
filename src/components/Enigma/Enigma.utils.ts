@@ -138,6 +138,12 @@ const useEnigmaStore = create<EnigmaStore>()(
         }
       });
     },
+    clear: () => {
+      set((state) => {
+        state.input = "";
+        state.output = "";
+      });
+    },
   }))
 );
 

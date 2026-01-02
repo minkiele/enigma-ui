@@ -1,4 +1,11 @@
-import { useMemo, useState, type FC, type MouseEventHandler } from "react";
+import {
+  useId,
+  useMemo,
+  useState,
+  type ChangeEventHandler,
+  type FC,
+  type MouseEventHandler,
+} from "react";
 import type { NewPlugBoardWiringProps } from "./NewPlugBoardWiring.models";
 import { getNewWiring } from "./NewPlugBoardWiring.utils";
 import { getLetter, normalizeInput } from "enigma-minkiele/enigma/lib/utils";
@@ -9,6 +16,8 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
   onAddWiring,
   wirings,
 }) => {
+  const plug0Id = useId();
+  const plug1Id = useId();
   const [wiring, setState] = useState<PlugBoardWiring>(getNewWiring);
   const isWiringComplete = useMemo(() => {
     try {
@@ -18,9 +27,12 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
       return false;
     }
   }, [wiring]);
-  const handleUpdatePlug = (value: string, key: 0 | 1) => {
-    setState(([first, second]) => (key ? [first, value] : [value, second]));
-  };
+  const handleUpdatePlug =
+    (key: 0 | 1): ChangeEventHandler<HTMLSelectElement> =>
+    (evt) => {
+      const value = evt.target.value;
+      setState(([first, second]) => (key ? [first, value] : [value, second]));
+    };
 
   const getForbiddenLetters = (add?: string) =>
     wirings
@@ -57,13 +69,11 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
   return (
     <Row className="enigmaPlugBoardWiring">
       <Col xs={12} sm={5}>
-        <Form.Group>
+        <Form.Group controlId={plug0Id}>
           <Form.Select
             className="select"
             value={wiring[0]}
-            onChange={(evt) => {
-              handleUpdatePlug(evt.target.value, 0);
-            }}
+            onChange={handleUpdatePlug(0)}
           >
             <option value=""></option>
             {renderAlphabet(wiring[1])}
@@ -71,13 +81,11 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
         </Form.Group>
       </Col>
       <Col xs={12} sm={5}>
-        <Form.Group>
+        <Form.Group controlId={plug1Id}>
           <Form.Select
             className="select"
             value={wiring[1]}
-            onChange={(evt) => {
-              handleUpdatePlug(evt.target.value, 1);
-            }}
+            onChange={handleUpdatePlug(1)}
           >
             <option value=""></option>
             {renderAlphabet(wiring[0])}

@@ -1,14 +1,14 @@
-import type { ChangeEvent, ReactNode } from "react";
+import type { ChangeEvent } from "react";
 import type { RotorType, ThinRotorType } from "../../../../models";
 
 export interface BaseRotorProps<T extends RotorType | ThinRotorType> {
-  type?: T;
+  value?: T;
   ringPosition?: number;
   windowLetter?: string;
-  children: ReactNode;
+  options: Array<{ value: T; label: string; disabled?: boolean }>;
   onChangeRotorType: (
     evt: ChangeEvent<HTMLSelectElement>,
-    type: NonNullable<BaseRotorProps<T>["type"]>
+    type: NonNullable<BaseRotorProps<T>["value"]>
   ) => void;
   onChangeRingPosition: (
     evt: ChangeEvent<HTMLSelectElement>,
