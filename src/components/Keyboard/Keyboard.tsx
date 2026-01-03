@@ -1,11 +1,16 @@
-import { useId, useState, type ChangeEventHandler, type FC, type MouseEventHandler } from "react";
+import {
+  useId,
+  useState,
+  type ChangeEventHandler,
+  type FC,
+  type MouseEventHandler,
+} from "react";
 import type { KeyboardProps } from "./Keyboard.models";
 import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { DEFAULT_GROUP_BY } from "./Keyboard.utils";
 
-const Keyboard: FC<KeyboardProps> = ({ input, output, onInput, onReset }) => {
-
+const Keyboard: FC<KeyboardProps> = ({ input, output, disabled, onInput, onReset }) => {
   const inputId = useId();
   const groupById = useId();
 
@@ -38,7 +43,7 @@ const Keyboard: FC<KeyboardProps> = ({ input, output, onInput, onReset }) => {
 
   return (
     <div className="keyboard">
-      <Row>
+      <Row className="mb-3">
         <Col className="keyboardInput" xs={12} md={2}>
           <Form.Group controlId={inputId}>
             <div className={output.length ? "input-group" : undefined}>
@@ -49,12 +54,16 @@ const Keyboard: FC<KeyboardProps> = ({ input, output, onInput, onReset }) => {
                 maxLength={1}
                 pattern="[A-Z]"
                 placeholder="Input"
+                disabled={disabled}
               />
-              <span className={output.length ? "input-group-btn" : "hidden"}>
-                <Button variant="danger" onClick={resetState}>
-                  Reset
-                </Button>
-              </span>
+              <Button
+                variant="danger"
+                className={output.length ? "input-group-btn" : "d-none"}
+                onClick={resetState}
+                disabled={disabled}
+              >
+                Reset
+              </Button>
             </div>
           </Form.Group>
         </Col>
@@ -70,7 +79,7 @@ const Keyboard: FC<KeyboardProps> = ({ input, output, onInput, onReset }) => {
       <Row>
         <Col className="keyboardOutput" xs={12} md={2}>
           <Form.Group className="splitSize" controlId={groupById}>
-            <label>Group output by</label>
+            <Form.Label>Group output by</Form.Label>
             <Form.Control
               type="number"
               value={groupBy}

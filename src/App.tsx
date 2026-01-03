@@ -11,7 +11,7 @@ const App: FC = () => (
       other features into my implementation of the <em>Enigma machine</em>, like
       the <em>Reflector D</em> and the <em>Uhr</em>. Providing a UI for them was
       starting to be a challenge because I had to rewrite all the code into a
-      modern language.
+      modern language. The Uhr though, is still unsupported.
     </p>
     <Enigma />
   </Container>

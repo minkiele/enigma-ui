@@ -259,7 +259,7 @@ const Enigma: FC = () => {
         </Row>
       </div>
       <Card className="mb-3">
-        <Card.Header className="bg-info-subtle">Plug board</Card.Header>
+        <Card.Header className="bg-info-subtle">Plugboard</Card.Header>
         <Card.Body>
           <PlugBoard
             wirings={wirings}
@@ -268,7 +268,7 @@ const Enigma: FC = () => {
           />
         </Card.Body>
       </Card>
-      <Card>
+      <Card className="mb-3">
         <Card.Header className="bg-info-subtle">Keyboard</Card.Header>
         <Card.Body>
           <Keyboard
