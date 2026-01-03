@@ -6,12 +6,12 @@ const PlugBoardWiring: FC<PlugBoardWiringProps> = ({
   wiring,
   onRemoveWiring,
 }) => (
-  <div className="enigmaPlugBoardWiring clearfix">
-    <strong>
+  <div className="enigmaPlugBoardWiring d-flex align-items-center">
+    <strong aria-label={`${wiring[0]} will exchange with ${wiring[1]}`}>
       {" "}
       {wiring[0]} &hArr; {wiring[1]}{" "}
     </strong>
-    <div className="pull-right">
+    <div className="ms-auto">
       <Button
         variant="danger"
         onClick={(evt) => {

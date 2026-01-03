@@ -38,7 +38,7 @@ const BaseRotor = <T extends RotorType | ThinRotorType>({
 
   return (
     <div className="enigmaRotor">
-      <Form.Group className="enigmaRotorType" controlId={rotorTypeId}>
+      <Form.Group className="enigmaRotorType mb-3" controlId={rotorTypeId}>
         <Form.Label>Type</Form.Label>
         <Form.Select
           className="select"
@@ -54,7 +54,7 @@ const BaseRotor = <T extends RotorType | ThinRotorType>({
         </Form.Select>
       </Form.Group>
       <Form.Group
-        className="enigmaRotorRingPosition"
+        className="enigmaRotorRingPosition mb-3"
         controlId={ringPositionId}
       >
         <Form.Label>Ring Position</Form.Label>

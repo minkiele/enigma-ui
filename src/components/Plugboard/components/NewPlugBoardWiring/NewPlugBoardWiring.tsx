@@ -70,6 +70,7 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
     <Row className="enigmaPlugBoardWiring">
       <Col xs={12} sm={5}>
         <Form.Group controlId={plug0Id}>
+          <Form.Label visuallyHidden>First letter</Form.Label>
           <Form.Select
             className="select"
             value={wiring[0]}
@@ -82,6 +83,7 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
       </Col>
       <Col xs={12} sm={5}>
         <Form.Group controlId={plug1Id}>
+          <Form.Label visuallyHidden>Second letter</Form.Label>
           <Form.Select
             className="select"
             value={wiring[1]}
@@ -92,7 +94,7 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
           </Form.Select>
         </Form.Group>
       </Col>
-      <Col xs={12} sm={2}>
+      <Col xs={12} sm={2} className="d-grid">
         <Button
           variant="primary"
           disabled={!isWiringComplete}

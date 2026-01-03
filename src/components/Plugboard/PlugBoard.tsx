@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import type { PlugBoardProps } from "./PlugBoard.models";
-import { Card, Form, ListGroup } from "react-bootstrap";
+import { Card, ListGroup } from "react-bootstrap";
 import PlugBoardWiring from "./components/PlugboardWiring/PlugboardWiring";
 import NewPlugBoardWiring from "./components/NewPlugBoardWiring/NewPlugBoardWiring";
 
@@ -13,16 +13,16 @@ const PlugBoard: FC<PlugBoardProps> = ({
 }) => {
   return (
     <div className="enigmaPlugBoard">
-      <ListGroup className="enigmaPlugBoardWirings">
+      {wirings.length > 0 && <ListGroup className="enigmaPlugBoardWirings mb-3">
         {wirings.map((wiring) => (
           <ListGroup.Item key={`${wiring[0]}${wiring[1]}`}>
             <PlugBoardWiring wiring={wiring} onRemoveWiring={onRemoveWiring} />
           </ListGroup.Item>
         ))}
-      </ListGroup>
+      </ListGroup>}
       {wirings.length < PLUGBOARD_MAX_SIZE && (
-        <Card body className="plugBoardAddWiring">
-          <Form.Label>New Wiring</Form.Label>
+        <Card body className="plugBoardAddWiring bg-light">
+          <p>New Wiring</p>
           <NewPlugBoardWiring wirings={wirings} onAddWiring={onAddWiring} />
         </Card>
       )}

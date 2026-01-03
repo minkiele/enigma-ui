@@ -114,19 +114,19 @@ const Enigma: FC = () => {
 
   return (
     <div className="enigmaUI">
-      <Card className="border-info mb-3">
-        <Card.Header>Machine type</Card.Header>
+      <Card className="mb-3">
+        <Card.Header className="bg-info-subtle">Machine type</Card.Header>
         <Card.Body>
           <TypeSelector type={type} onChangeType={handleChangeType} />
         </Card.Body>
       </Card>
       <div className="enigmaConfiguration">
-        <Card
-          className={classNames("mb-3", {
-            "border-success": reflector != null,
-          })}
-        >
-          <Card.Header>
+        <Card className={classNames("mb-3")}>
+          <Card.Header
+            className={classNames({
+              "text-bg-success": reflector,
+            })}
+          >
             {type === "M3" ? "Reflector" : "Thin reflector"}
           </Card.Header>
           <Card.Body>
@@ -146,10 +146,14 @@ const Enigma: FC = () => {
         <Row className="mb-3">
           {type === "M4" && (
             <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
-              <Card
-                className={classNames({ "border-success": fourthRotor?.type })}
-              >
-                <Card.Header>Fourth Rotor</Card.Header>
+              <Card>
+                <Card.Header
+                  className={classNames({
+                    "text-bg-success": fourthRotor?.type,
+                  })}
+                >
+                  Fourth Rotor
+                </Card.Header>
                 <Card.Body>
                   <ThinRotor
                     value={fourthRotor?.type}
@@ -166,8 +170,12 @@ const Enigma: FC = () => {
             </Col>
           )}
           <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
-            <Card className={classNames({ "border-success": leftRotor?.type })}>
-              <Card.Header>Left Rotor</Card.Header>
+            <Card>
+              <Card.Header
+                className={classNames({ "text-bg-success": leftRotor?.type })}
+              >
+                Left Rotor
+              </Card.Header>
               <Card.Body>
                 <Rotor
                   value={leftRotor?.type}
@@ -182,10 +190,12 @@ const Enigma: FC = () => {
             </Card>
           </Col>
           <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
-            <Card
-              className={classNames({ "border-success": centerRotor?.type })}
-            >
-              <Card.Header>Center Rotor</Card.Header>
+            <Card>
+              <Card.Header
+                className={classNames({ "text-bg-success": centerRotor?.type })}
+              >
+                Center Rotor
+              </Card.Header>
               <Card.Body>
                 <Rotor
                   value={centerRotor?.type}
@@ -200,10 +210,12 @@ const Enigma: FC = () => {
             </Card>
           </Col>
           <Col {...rotorColsAttrs}>
-            <Card
-              className={classNames({ "border-success": rightRotor?.type })}
-            >
-              <Card.Header>Right Rotor</Card.Header>
+            <Card>
+              <Card.Header
+                className={classNames({ "text-bg-success": rightRotor?.type })}
+              >
+                Right Rotor
+              </Card.Header>
               <Card.Body>
                 <Rotor
                   value={rightRotor?.type}
@@ -219,8 +231,8 @@ const Enigma: FC = () => {
           </Col>
         </Row>
       </div>
-      <Card className="border-info mb-3">
-        <Card.Header>Plug board</Card.Header>
+      <Card className="mb-3">
+        <Card.Header className="bg-info-subtle">Plug board</Card.Header>
         <Card.Body>
           <PlugBoard
             wirings={wirings}
@@ -230,7 +242,7 @@ const Enigma: FC = () => {
         </Card.Body>
       </Card>
       <Card>
-        <Card.Header>Keyboard</Card.Header>
+        <Card.Header className="bg-info-subtle">Keyboard</Card.Header>
         <Card.Body>
           <Keyboard
             input={input}

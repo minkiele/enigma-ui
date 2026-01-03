@@ -13,6 +13,7 @@ import {
   ReflectorB,
   ReflectorBeta,
   ReflectorC,
+  ReflectorD,
   ReflectorGamma,
   RotorI,
   RotorII,
@@ -219,6 +220,9 @@ export const useEnigma = () => {
         case "Thin C": {
           reflector = new ThinReflectorC();
           break;
+        }
+        case "D": {
+          reflector = new ReflectorD();
         }
       }
       machine.current.setReflector(reflector);
