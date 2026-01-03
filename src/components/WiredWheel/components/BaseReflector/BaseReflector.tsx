@@ -7,6 +7,7 @@ const BaseReflector = <T extends ReflectorType | ThinReflectorType>({
   value,
   options,
   onChangeType,
+  children
 }: BaseReflectorProps<T>) => {
   const id = useId();
   const handleChangeType: ChangeEventHandler<HTMLSelectElement> = (evt) => {
@@ -30,6 +31,7 @@ const BaseReflector = <T extends ReflectorType | ThinReflectorType>({
             ))}
           </Form.Select>
         </Form.Group>
+        {children}
       </div>
     </div>
   );

@@ -15,23 +15,31 @@ import type { TypeSelectorProps } from "../TypeSelector/TypeSelector.models";
 import type { BaseReflectorProps } from "../WiredWheel/components/BaseReflector/BaseReflector.models";
 import ThinRotor from "../WiredWheel/ThinRotor/ThinRotor";
 import type { RotorIdentifier } from "./Enigma.models";
-import PlugBoard from "../Plugboard/PlugBoard";
-import type { PlugBoardProps } from "../Plugboard/PlugBoard.models";
+import PlugBoard from "../PlugBoard/PlugBoard";
+import type { PlugBoardProps } from "../PlugBoard/PlugBoard.models";
 import type { BaseRotorProps } from "../WiredWheel/components/BaseRotor/BaseRotor.models";
 import Keyboard from "../Keyboard/Keyboard";
 import type { KeyboardProps } from "../Keyboard/Keyboard.models";
 import classNames from "classnames";
+import type { ReflectorProps } from "../WiredWheel/Reflector/Reflector.models";
 
 const Enigma: FC = () => {
   const {
     type,
     setMachineType,
     reflector,
+    isReflectorValid,
     setReflectorType,
+    addReflectorWiring,
+    removeReflectorWiring,
     fourthRotor,
+    isFourthRotorValid,
     leftRotor,
+    isLeftRotorValid,
     centerRotor,
+    isCenterRotorValid,
     rightRotor,
+    isRightRotorValid,
     setRotorType,
     setRotorRingPosition,
     setRotorWindowLetter,
@@ -52,6 +60,20 @@ const Enigma: FC = () => {
     ReflectorType | ThinReflectorType
   >["onChangeType"] = (_, type) => {
     setReflectorType(type);
+  };
+
+  const handleAddReflectorWiring: ReflectorProps["onAddWiring"] = (
+    _,
+    wiring
+  ) => {
+    addReflectorWiring(wiring);
+  };
+
+  const handleRemoveReflectorWiring: ReflectorProps["onRemoveWiring"] = (
+    _,
+    wiring
+  ) => {
+    removeReflectorWiring(wiring);
   };
 
   const rotorColsAttrs = { xs: 12, md: type === "M3" ? 4 : 3 };
@@ -124,7 +146,7 @@ const Enigma: FC = () => {
         <Card className={classNames("mb-3")}>
           <Card.Header
             className={classNames({
-              "text-bg-success": reflector,
+              "text-bg-success": isReflectorValid,
             })}
           >
             {type === "M3" ? "Reflector" : "Thin reflector"}
@@ -132,12 +154,15 @@ const Enigma: FC = () => {
           <Card.Body>
             {type === "M3" ? (
               <Reflector
-                value={reflector as ReflectorType}
+                value={reflector?.type as ReflectorType | undefined}
                 onChangeType={handleChangeReflector}
+                wirings={reflector?.wirings}
+                onAddWiring={handleAddReflectorWiring}
+                onRemoveWiring={handleRemoveReflectorWiring}
               />
             ) : (
               <ThinReflector
-                value={reflector as ThinReflectorType}
+                value={reflector?.type as ThinReflectorType | undefined}
                 onChangeType={handleChangeReflector}
               />
             )}
@@ -149,7 +174,7 @@ const Enigma: FC = () => {
               <Card>
                 <Card.Header
                   className={classNames({
-                    "text-bg-success": fourthRotor?.type,
+                    "text-bg-success": isFourthRotorValid,
                   })}
                 >
                   Fourth Rotor
@@ -172,7 +197,7 @@ const Enigma: FC = () => {
           <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
             <Card>
               <Card.Header
-                className={classNames({ "text-bg-success": leftRotor?.type })}
+                className={classNames({ "text-bg-success": isLeftRotorValid })}
               >
                 Left Rotor
               </Card.Header>
@@ -192,7 +217,9 @@ const Enigma: FC = () => {
           <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
             <Card>
               <Card.Header
-                className={classNames({ "text-bg-success": centerRotor?.type })}
+                className={classNames({
+                  "text-bg-success": isCenterRotorValid,
+                })}
               >
                 Center Rotor
               </Card.Header>
@@ -212,7 +239,7 @@ const Enigma: FC = () => {
           <Col {...rotorColsAttrs}>
             <Card>
               <Card.Header
-                className={classNames({ "text-bg-success": rightRotor?.type })}
+                className={classNames({ "text-bg-success": isRightRotorValid })}
               >
                 Right Rotor
               </Card.Header>

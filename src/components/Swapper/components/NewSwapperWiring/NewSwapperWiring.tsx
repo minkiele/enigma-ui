@@ -3,22 +3,22 @@ import {
   useMemo,
   useState,
   type ChangeEventHandler,
-  type FC,
   type MouseEventHandler,
 } from "react";
-import type { NewPlugBoardWiringProps } from "./NewPlugBoardWiring.models";
-import { getNewWiring } from "./NewPlugBoardWiring.utils";
+import type { NewSwapperWiringProps } from "./NewSwapperWiring.models";
+import { getNewWiring } from "./NewSwapperWiring.utils";
 import { getLetter, normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import type { PlugBoardWiring } from "../../../Enigma/Enigma.models";
+import type { Wiring } from "../../../Enigma/Enigma.models";
 
-const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
+const NewSwapperWiring = <T extends Wiring>({
   onAddWiring,
   wirings,
-}) => {
+  forbidden: forbiddenProp,
+}: NewSwapperWiringProps<T>) => {
   const plug0Id = useId();
   const plug1Id = useId();
-  const [wiring, setState] = useState<PlugBoardWiring>(getNewWiring);
+  const [wiring, setState] = useState<T>(getNewWiring);
   const isWiringComplete = useMemo(() => {
     try {
       wiring.forEach(normalizeInput);
@@ -31,18 +31,20 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
     (key: 0 | 1): ChangeEventHandler<HTMLSelectElement> =>
     (evt) => {
       const value = evt.target.value;
-      setState(([first, second]) => (key ? [first, value] : [value, second]));
+      setState(
+        ([first, second]) => (key ? [first, value] : [value, second]) as T
+      );
     };
 
-  const getForbiddenLetters = (add?: string) =>
+  const getForbiddenLetters = (add?: string | Array<string>) =>
     wirings
       .reduce<Array<string>>((acc, wiring) => [...acc, ...wiring], [])
       .concat(add ? add : []);
 
-  const renderAlphabet = (disabledLetter = "") => {
+  const renderAlphabet = (disabledLetters?: string | Array<string>) => {
     const alphabet = [];
 
-    const forbiddenLetters = getForbiddenLetters(disabledLetter);
+    const forbiddenLetters = getForbiddenLetters(disabledLetters);
 
     for (let i = 0; i < 26; i += 1) {
       const letter = getLetter(i);
@@ -66,8 +68,10 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
     }
   };
 
+  const forbidden = useMemo(() => forbiddenProp ?? [], [forbiddenProp]);
+
   return (
-    <Row className="enigmaPlugBoardWiring">
+    <Row className="enigmaSwapperWiring">
       <Col xs={12} sm={5}>
         <Form.Group controlId={plug0Id}>
           <Form.Label visuallyHidden>First letter</Form.Label>
@@ -77,7 +81,7 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
             onChange={handleUpdatePlug(0)}
           >
             <option value=""></option>
-            {renderAlphabet(wiring[1])}
+            {renderAlphabet([...forbidden, wiring[1]])}
           </Form.Select>
         </Form.Group>
       </Col>
@@ -90,7 +94,7 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
             onChange={handleUpdatePlug(1)}
           >
             <option value=""></option>
-            {renderAlphabet(wiring[0])}
+            {renderAlphabet([...forbidden, wiring[0]])}
           </Form.Select>
         </Form.Group>
       </Col>
@@ -107,4 +111,4 @@ const NewPlugBoardWiring: FC<NewPlugBoardWiringProps> = ({
   );
 };
 
-export default NewPlugBoardWiring;
+export default NewSwapperWiring;

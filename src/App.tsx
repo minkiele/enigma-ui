@@ -4,8 +4,11 @@ import Enigma from "./components/Enigma/Enigma";
 
 const App: FC = () => (
   <Container>
-    <h1>enigma-ui</h1>
-    <p>After 10 years I found the courage to rewrite the interface to the Enigma UI</p>
+    <h1>EnigmaUI</h1>
+    <p>
+      It was 2016 when I wrote the first version of EnigmaUI. It was a different
+      React, a different decade, I had a different job.
+    </p>
     <Enigma />
   </Container>
 );

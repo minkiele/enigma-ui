@@ -12,13 +12,21 @@ export interface RotorState<T extends RotorType | ThinRotorType> {
   windowLetter: string;
 }
 
+export type Wiring = [string, string];
 
-export type PlugBoardWiring = [string, string];
+export type ReflectorWiring = Wiring;
+
+export interface ReflectorState<T extends ReflectorType | ThinReflectorType> {
+  type: T;
+  wirings: Array<ReflectorWiring>;
+}
+
+export type PlugBoardWiring = Wiring;
 type PlugBoardState = Array<PlugBoardWiring>;
 
 export interface EnigmaState {
   type: EnigmaType;
-  reflector?: ReflectorType | ThinReflectorType;
+  reflector?: ReflectorState<ReflectorType | ThinReflectorType>;
   fourthRotor?: RotorState<ThinRotorType>;
   leftRotor?: RotorState<RotorType>;
   centerRotor?: RotorState<RotorType>;
@@ -42,7 +50,12 @@ export interface EnigmaUpdateData {
 interface EnigmaActions {
   setMachineType: (type: EnigmaType) => void;
   setReflectorType: (type: ReflectorType | ThinReflectorType) => void;
-  setRotorType: (rotor: RotorIdentifier, type: RotorState<RotorType | ThinRotorType>["type"]) => void;
+  addReflectorWiring: (wiring: ReflectorWiring) => void;
+  removeReflectorWiring: (wiring: ReflectorWiring) => void;
+  setRotorType: (
+    rotor: RotorIdentifier,
+    type: RotorState<RotorType | ThinRotorType>["type"]
+  ) => void;
   setRotorRingPosition: (
     rotor: RotorIdentifier,
     ringPosition: RotorState<RotorType | ThinRotorType>["ringPosition"]
