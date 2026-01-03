@@ -7,7 +7,11 @@ const App: FC = () => (
     <h1>EnigmaUI</h1>
     <p>
       It was 2016 when I wrote the first version of EnigmaUI. It was a different
-      React, a different decade, I had a different job.
+      React, a different decade, I had a different job. Over time I integrated
+      other features into my implementation of the <em>Enigma machine</em>, like
+      the <em>Reflector D</em> and the <em>Uhr</em>. Providing a UI for them was
+      starting to be a challenge because I had to rewrite all the code into a
+      modern language.
     </p>
     <Enigma />
   </Container>
