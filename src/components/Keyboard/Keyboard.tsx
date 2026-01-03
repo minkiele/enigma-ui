@@ -10,7 +10,13 @@ import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { DEFAULT_GROUP_BY } from "./Keyboard.utils";
 
-const Keyboard: FC<KeyboardProps> = ({ input, output, disabled, onInput, onReset }) => {
+const Keyboard: FC<KeyboardProps> = ({
+  input,
+  output,
+  disabled,
+  onInput,
+  onReset,
+}) => {
   const inputId = useId();
   const groupById = useId();
 
@@ -60,7 +66,6 @@ const Keyboard: FC<KeyboardProps> = ({ input, output, disabled, onInput, onReset
                 variant="danger"
                 className={output.length ? "input-group-btn" : "d-none"}
                 onClick={resetState}
-                disabled={disabled}
               >
                 Reset
               </Button>

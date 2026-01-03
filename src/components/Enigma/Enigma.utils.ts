@@ -27,6 +27,7 @@ import {
   ThinReflectorC,
   ThinRotorBeta,
   ThinRotorGamma,
+  Uhr,
 } from "enigma-minkiele";
 import Reflector from "enigma-minkiele/enigma/Component/WiredWheel/Reflector/Reflector";
 import type Rotor from "enigma-minkiele/enigma/Component/WiredWheel/Rotor/Rotor";
@@ -40,6 +41,7 @@ const initialState: EnigmaState = {
   centerRotor: undefined,
   rightRotor: undefined,
   wirings: [],
+  uhrSetting: undefined,
   input: "",
   output: "",
 };
@@ -115,6 +117,21 @@ const useEnigmaStore = create<EnigmaStore>()(
         );
       });
     },
+    plugUhr: () => {
+      set((state) => {
+        state.uhrSetting = 0;
+      });
+    },
+    unplugUhr: () => {
+      set((state) => {
+        state.uhrSetting = undefined;
+      });
+    },
+    setUhrSetting: (setting) => {
+      set((state) => {
+        state.uhrSetting = setting;
+      });
+    },
     setMachineType: (type) => {
       set((state) => ({ ...state, ...initialState, type }));
     },
@@ -173,6 +190,7 @@ export const useEnigma = () => {
     setMachineType: storeSetMachineType,
     addPlugBoardWiring: storeAddPlugBoardWiring,
     removePlugBoardWiring: storeRemovePlugBoardWiring,
+    setUhrSetting: storeSetUhrSetting,
     setReflectorType: storeSetReflectorType,
     addReflectorWiring: storeAddReflectorWiring,
     removeReflectorWiring: storeRemoveReflectorWiring,
@@ -181,13 +199,16 @@ export const useEnigma = () => {
     setRotorWindowLetter: storeSetRotorWindowLetter,
     update,
     type,
+    wirings,
     ...state
   } = useEnigmaStore();
   const machineRef = useRef<Enigma | EnigmaM4>(new Enigma());
   const reflectorRef = useRef<Reflector | undefined>(undefined);
+  const uhrRef = useRef<Uhr | undefined>(undefined);
   const setMachineType = useCallback<typeof storeSetMachineType>(
     (type) => {
       reflectorRef.current = undefined;
+      uhrRef.current = undefined;
       if (type === "M3") {
         machineRef.current = new Enigma();
       } else {
@@ -199,19 +220,70 @@ export const useEnigma = () => {
   );
   const addPlugBoardWiring = useCallback<typeof storeAddPlugBoardWiring>(
     (wiring) => {
-      machineRef.current.getPlugBoard().plugWire(...wiring);
+      if (uhrRef.current instanceof Uhr) {
+        machineRef.current
+          .getPlugBoard()
+          .plugWire(
+            uhrRef.current.prepareUhrWire(wirings.length + 1, ...wiring)
+          );
+      } else {
+        machineRef.current.getPlugBoard().plugWire(...wiring);
+      }
       storeAddPlugBoardWiring(wiring);
     },
-    [storeAddPlugBoardWiring]
+    [wirings, storeAddPlugBoardWiring]
   );
 
   const removePlugBoardWiring = useCallback<typeof storeAddPlugBoardWiring>(
     (wiring) => {
-      machineRef.current.getPlugBoard().unplugWire(...wiring);
+      if (uhrRef.current instanceof Uhr) {
+        const index =
+          wirings.findIndex(
+            (toRemove) =>
+              !(
+                (wiring[0] === toRemove[0] && wiring[1] === toRemove[1]) ||
+                (wiring[0] === toRemove[1] && wiring[1] === toRemove[0])
+              )
+          ) + 1;
+        if (index > 0) {
+          machineRef.current
+            .getPlugBoard()
+            .unplugWire(uhrRef.current.getUhrWire(index));
+        }
+      } else {
+        machineRef.current.getPlugBoard().unplugWire(...wiring);
+      }
       storeRemovePlugBoardWiring(wiring);
     },
-    [storeRemovePlugBoardWiring]
+    [wirings, storeRemovePlugBoardWiring]
   );
+
+  const plugUhr = useCallback(() => {
+    uhrRef.current = new Uhr();
+    uhrRef.current.prepareUhrWires(wirings);
+    machineRef.current.getPlugBoard().unplugAllWires();
+    machineRef.current.getPlugBoard().plugWires(uhrRef.current.getUhrWires());
+    storeSetUhrSetting(0);
+  }, [wirings, storeSetUhrSetting]);
+
+  const unplugUhr = useCallback(() => {
+    machineRef.current.getPlugBoard().unplugAllWires();
+    machineRef.current.getPlugBoard().plugWires(wirings);
+    uhrRef.current = undefined;
+    storeSetUhrSetting(undefined);
+  }, [wirings, storeSetUhrSetting]);
+
+  const setUhrSetting = useCallback(
+    (uhrSetting: number) => {
+      if (uhrRef.current instanceof Uhr) {
+        uhrRef.current.setUhrSetting(uhrSetting);
+        storeSetUhrSetting(uhrSetting);
+      }
+    },
+    [storeSetUhrSetting]
+  );
+
+  const isPlugBoardValid = state.uhrSetting == null || wirings.length === 10;
 
   const setReflectorType = useCallback<typeof storeSetReflectorType>(
     (type) => {
@@ -402,8 +474,13 @@ export const useEnigma = () => {
     ...state,
     type,
     setMachineType,
+    wirings,
+    isPlugBoardValid,
     addPlugBoardWiring,
     removePlugBoardWiring,
+    plugUhr,
+    unplugUhr,
+    setUhrSetting,
     isReflectorValid,
     setReflectorType,
     addReflectorWiring,

@@ -22,6 +22,8 @@ import Keyboard from "../Keyboard/Keyboard";
 import type { KeyboardProps } from "../Keyboard/Keyboard.models";
 import classNames from "classnames";
 import type { ReflectorProps } from "../WiredWheel/Reflector/Reflector.models";
+import Uhr from "../Uhr/Uhr";
+import type { UhrProps } from "../Uhr/Uhr.models";
 
 const Enigma: FC = () => {
   const {
@@ -44,8 +46,13 @@ const Enigma: FC = () => {
     setRotorRingPosition,
     setRotorWindowLetter,
     wirings,
+    isPlugBoardValid,
     addPlugBoardWiring,
     removePlugBoardWiring,
+    uhrSetting,
+    plugUhr,
+    unplugUhr,
+    setUhrSetting,
     input,
     output,
     encode,
@@ -128,6 +135,18 @@ const Enigma: FC = () => {
     wiring
   ) => {
     removePlugBoardWiring(wiring);
+  };
+
+  const handlePlugUhr: UhrProps["onPlugUhr"] = () => {
+    plugUhr();
+  };
+
+  const handleUnplugUhr: UhrProps["onUnplugUhr"] = () => {
+    unplugUhr();
+  };
+
+  const handleSetUhrSetting: UhrProps["onSetUhrSetting"] = (_, uhrSetting) => {
+    setUhrSetting(uhrSetting);
   };
 
   const handleInput: KeyboardProps["onInput"] = (_, input) => {
@@ -259,12 +278,31 @@ const Enigma: FC = () => {
         </Row>
       </div>
       <Card className="mb-3">
-        <Card.Header className="bg-info-subtle">Plugboard</Card.Header>
+        <Card.Header
+          className={classNames({
+            "bg-info-subtle": uhrSetting == null,
+            "text-bg-success": uhrSetting != null && isPlugBoardValid,
+          })}
+        >
+          Plugboard
+        </Card.Header>
         <Card.Body>
           <PlugBoard
             wirings={wirings}
             onAddWiring={handleAddPlugBoardWiring}
             onRemoveWiring={handleRemovePlugBoardWiring}
+            lifo={uhrSetting != null}
+          />
+        </Card.Body>
+      </Card>
+      <Card className="mb-3">
+        <Card.Header className="bg-info-subtle">Uhr</Card.Header>
+        <Card.Body>
+          <Uhr
+            uhrSetting={uhrSetting}
+            onPlugUhr={handlePlugUhr}
+            onUnplugUhr={handleUnplugUhr}
+            onSetUhrSetting={handleSetUhrSetting}
           />
         </Card.Body>
       </Card>
@@ -276,6 +314,16 @@ const Enigma: FC = () => {
             output={output}
             onInput={handleInput}
             onReset={clear}
+            disabled={
+              !(
+                isReflectorValid &&
+                (type === "M3" || isFourthRotorValid) &&
+                isLeftRotorValid &&
+                isCenterRotorValid &&
+                isRightRotorValid &&
+                isPlugBoardValid
+              )
+            }
           />
         </Card.Body>
       </Card>

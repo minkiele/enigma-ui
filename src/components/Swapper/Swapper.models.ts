@@ -5,6 +5,7 @@ export interface SwapperProps<T extends Wiring> {
   limit?: number;
   forbidden?: Array<string>;
   wirings: Array<T>;
+  lifo?: boolean;
   onRemoveWiring: (
     evt: MouseEvent<HTMLButtonElement>,
     wiring: T

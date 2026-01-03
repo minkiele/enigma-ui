@@ -32,6 +32,7 @@ export interface EnigmaState {
   centerRotor?: RotorState<RotorType>;
   rightRotor?: RotorState<RotorType>;
   wirings: PlugBoardState;
+  uhrSetting?: number;
   input: string;
   output: string;
 }
@@ -66,6 +67,7 @@ interface EnigmaActions {
   ) => void;
   addPlugBoardWiring: (wiring: PlugBoardWiring) => void;
   removePlugBoardWiring: (wiring: PlugBoardWiring) => void;
+  setUhrSetting: (setting: number | undefined) => void;
   update: (data: EnigmaUpdateData) => void;
   clear: () => void;
 }

@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 
 const SwapperWiring = <T extends Wiring>({
   wiring,
+  disabled,
   onRemoveWiring,
 }: SwapperWiringProps<T>) => {
   const handleRemoveWiring: MouseEventHandler<HTMLButtonElement> = (evt) => {
@@ -17,7 +18,7 @@ const SwapperWiring = <T extends Wiring>({
         {wiring[0]} &hArr; {wiring[1]}{" "}
       </strong>
       <div className="ms-auto">
-        <Button variant="danger" onClick={handleRemoveWiring}>
+        <Button variant="danger" onClick={handleRemoveWiring} disabled={disabled}>
           Remove
         </Button>
       </div>

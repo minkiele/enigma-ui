@@ -10,13 +10,18 @@ const Swapper = <T extends Wiring>({
   onRemoveWiring,
   limit,
   forbidden,
+  lifo,
 }: SwapperProps<T>) => (
   <div className="swapper">
     {wirings.length > 0 && (
       <ListGroup className="swapper-wirings mb-3">
-        {wirings.map((wiring) => (
+        {wirings.map((wiring, index) => (
           <ListGroup.Item key={`${wiring[0]}${wiring[1]}`}>
-            <SwapperWiring wiring={wiring} onRemoveWiring={onRemoveWiring} />
+            <SwapperWiring
+              wiring={wiring}
+              onRemoveWiring={onRemoveWiring}
+              disabled={lifo === true && index < wirings.length - 1}
+            />
           </ListGroup.Item>
         ))}
       </ListGroup>

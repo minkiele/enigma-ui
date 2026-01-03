@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import { Container } from "react-bootstrap";
 import Enigma from "./components/Enigma/Enigma";
+import "./styles.scss";
 
 const App: FC = () => (
   <Container>
@@ -11,7 +12,7 @@ const App: FC = () => (
       other features into my implementation of the <em>Enigma machine</em>, like
       the <em>Reflector D</em> and the <em>Uhr</em>. Providing a UI for them was
       starting to be a challenge because I had to rewrite all the code into a
-      modern language. The Uhr though, is still unsupported.
+      modern language. Thanks for the '25s Christmas holidays!
     </p>
     <Enigma />
   </Container>
