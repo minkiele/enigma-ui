@@ -1,6 +1,6 @@
-import { type FC } from "react";
-import type { ReflectorDProps } from "./ReflectorD.models";
 import Swapper from "../../../../Swapper/Swapper";
+import type { ReflectorDProps } from "./ReflectorD.models";
+import { type FC } from "react";
 
 const REFLECTOR_D_FORBIDDEN = ["B", "O"];
 

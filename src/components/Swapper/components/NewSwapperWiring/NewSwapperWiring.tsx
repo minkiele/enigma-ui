@@ -1,3 +1,7 @@
+import type { Wiring } from "../../../Enigma/Enigma.models";
+import type { NewSwapperWiringProps } from "./NewSwapperWiring.models";
+import { getNewWiring } from "./NewSwapperWiring.utils";
+import { getLetter, normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import {
   useId,
   useMemo,
@@ -5,11 +9,7 @@ import {
   type ChangeEventHandler,
   type MouseEventHandler,
 } from "react";
-import type { NewSwapperWiringProps } from "./NewSwapperWiring.models";
-import { getNewWiring } from "./NewSwapperWiring.utils";
-import { getLetter, normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import type { Wiring } from "../../../Enigma/Enigma.models";
 
 const NewSwapperWiring = <T extends Wiring>({
   onAddWiring,
@@ -32,7 +32,7 @@ const NewSwapperWiring = <T extends Wiring>({
     (evt) => {
       const value = evt.target.value;
       setState(
-        ([first, second]) => (key ? [first, value] : [value, second]) as T
+        ([first, second]) => (key ? [first, value] : [value, second]) as T,
       );
     };
 
@@ -55,7 +55,7 @@ const NewSwapperWiring = <T extends Wiring>({
           value={letter}
         >
           {letter}
-        </option>
+        </option>,
       );
     }
     return alphabet;

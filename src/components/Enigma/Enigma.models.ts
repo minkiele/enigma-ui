@@ -55,15 +55,15 @@ interface EnigmaActions {
   removeReflectorWiring: (wiring: ReflectorWiring) => void;
   setRotorType: (
     rotor: RotorIdentifier,
-    type: RotorState<RotorType | ThinRotorType>["type"]
+    type: RotorState<RotorType | ThinRotorType>["type"],
   ) => void;
   setRotorRingPosition: (
     rotor: RotorIdentifier,
-    ringPosition: RotorState<RotorType | ThinRotorType>["ringPosition"]
+    ringPosition: RotorState<RotorType | ThinRotorType>["ringPosition"],
   ) => void;
   setRotorWindowLetter: (
     rotor: RotorIdentifier,
-    windowLetter: RotorState<RotorType | ThinRotorType>["windowLetter"]
+    windowLetter: RotorState<RotorType | ThinRotorType>["windowLetter"],
   ) => void;
   addPlugBoardWiring: (wiring: PlugBoardWiring) => void;
   removePlugBoardWiring: (wiring: PlugBoardWiring) => void;

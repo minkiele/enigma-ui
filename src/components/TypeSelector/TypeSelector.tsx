@@ -1,7 +1,7 @@
+import type { EnigmaType } from "../../models";
+import type { TypeSelectorProps } from "./TypeSelector.models";
 import { useId, type ChangeEventHandler, type FC } from "react";
 import { Form } from "react-bootstrap";
-import type { TypeSelectorProps } from "./TypeSelector.models";
-import type { EnigmaType } from "../../models";
 
 const TypeSelector: FC<TypeSelectorProps> = ({ type, onChangeType }) => {
   const id = useId();

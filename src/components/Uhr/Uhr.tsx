@@ -1,6 +1,6 @@
-import { Col, Form, Row } from "react-bootstrap";
 import type { UhrProps } from "./Uhr.models";
 import { useId, type ChangeEventHandler, type FC } from "react";
+import { Col, Form, Row } from "react-bootstrap";
 
 const Uhr: FC<UhrProps> = ({
   uhrSetting,

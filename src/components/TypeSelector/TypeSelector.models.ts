@@ -1,5 +1,5 @@
-import type { ChangeEvent } from "react";
 import type { EnigmaType } from "../../models";
+import type { ChangeEvent } from "react";
 
 export interface TypeSelectorProps {
   type: EnigmaType;

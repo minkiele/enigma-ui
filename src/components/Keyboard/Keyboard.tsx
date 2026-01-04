@@ -1,3 +1,6 @@
+import type { KeyboardProps } from "./Keyboard.models";
+import { DEFAULT_GROUP_BY } from "./Keyboard.utils";
+import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import {
   useId,
   useState,
@@ -5,10 +8,7 @@ import {
   type FC,
   type MouseEventHandler,
 } from "react";
-import type { KeyboardProps } from "./Keyboard.models";
-import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { DEFAULT_GROUP_BY } from "./Keyboard.utils";
 
 const Keyboard: FC<KeyboardProps> = ({
   input,

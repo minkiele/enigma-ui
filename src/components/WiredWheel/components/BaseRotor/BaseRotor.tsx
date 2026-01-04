@@ -1,9 +1,9 @@
+import type { RotorType, ThinRotorType } from "../../../../models";
+import type { BaseRotorProps } from "./BaseRotor.models";
+import { ringPositions } from "./BaseRotor.utils";
+import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import { useId, type ChangeEventHandler } from "react";
 import { Form } from "react-bootstrap";
-import type { BaseRotorProps } from "./BaseRotor.models";
-import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
-import { ringPositions } from "./BaseRotor.utils";
-import type { RotorType, ThinRotorType } from "../../../../models";
 
 const BaseRotor = <T extends RotorType | ThinRotorType>({
   onChangeRotorType,
@@ -19,19 +19,19 @@ const BaseRotor = <T extends RotorType | ThinRotorType>({
   const windowLetterId = useId();
 
   const handleChangeRotorType: ChangeEventHandler<HTMLSelectElement> = (
-    evt
+    evt,
   ) => {
     onChangeRotorType(evt, evt.target.value as T);
   };
 
   const handleChangeRingPosition: ChangeEventHandler<HTMLSelectElement> = (
-    evt
+    evt,
   ) => {
     onChangeRingPosition(evt, Number(evt.target.value));
   };
 
   const handleChangeWindowLetter: ChangeEventHandler<HTMLInputElement> = (
-    evt
+    evt,
   ) => {
     onChangeWindowLetter(evt, normalizeInput(evt.target.value));
   };

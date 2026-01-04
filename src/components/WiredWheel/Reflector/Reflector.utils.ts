@@ -1,9 +1,14 @@
-import type { ReflectorType } from "../../../models";
-import type { BaseReflectorProps } from "../components/BaseReflector/BaseReflector.models";
+import { thinReflectors } from "../../Enigma/Enigma.utils";
+import type { ReflectorProps } from "./Reflector.models";
 
-export const reflectorTypes = (
-  ["A", "B", "C", "Beta", "Gamma", "D"] satisfies Array<ReflectorType>
-).map((rotorType) => ({
-  value: rotorType,
-  label: rotorType,
-})) satisfies BaseReflectorProps<ReflectorType>["options"];
+export const reflectorTypes: Array<NonNullable<ReflectorProps["value"]>> = [
+  "A",
+  "B",
+  "C",
+  "Beta",
+  "Gamma",
+  "D",
+];
+
+export const thinReflectorTypes: Array<NonNullable<ReflectorProps["value"]>> =
+  thinReflectors;

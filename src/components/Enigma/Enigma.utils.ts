@@ -1,11 +1,14 @@
-import { create } from "zustand";
+import type {
+  ReflectorType,
+  RotorType,
+  ThinReflectorType,
+  ThinRotorType,
+} from "../../models";
 import type {
   EnigmaState,
   EnigmaStore,
   RotorIdentifier,
 } from "./Enigma.models";
-import { immer } from "zustand/middleware/immer";
-import { useCallback, useRef } from "react";
 import {
   Enigma,
   EnigmaM4,
@@ -31,7 +34,9 @@ import {
 } from "enigma-minkiele";
 import Reflector from "enigma-minkiele/enigma/Component/WiredWheel/Reflector/Reflector";
 import type Rotor from "enigma-minkiele/enigma/Component/WiredWheel/Rotor/Rotor";
-import type { RotorType, ThinRotorType } from "../../models";
+import { useCallback, useRef } from "react";
+import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
 
 const initialState: EnigmaState = {
   type: "M3",
@@ -62,6 +67,11 @@ const getRotorName = (rotor: RotorIdentifier) => {
     }
   }
 };
+
+export const thinReflectors: Array<ReflectorType | ThinReflectorType> = [
+  "Thin B",
+  "Thin C",
+];
 
 const useEnigmaStore = create<EnigmaStore>()(
   immer((set) => ({
@@ -113,7 +123,7 @@ const useEnigmaStore = create<EnigmaStore>()(
             !(
               (wiring[0] === toRemove[0] && wiring[1] === toRemove[1]) ||
               (wiring[0] === toRemove[1] && wiring[1] === toRemove[0])
-            )
+            ),
         );
       });
     },
@@ -138,6 +148,9 @@ const useEnigmaStore = create<EnigmaStore>()(
     setReflectorType: (type) => {
       set((state) => {
         state.reflector = { type, wirings: [] };
+        if (state.type === "M4" && !thinReflectors.includes(type)) {
+          state.fourthRotor = undefined;
+        }
       });
     },
     addReflectorWiring: (wiring) => {
@@ -155,7 +168,7 @@ const useEnigmaStore = create<EnigmaStore>()(
               !(
                 (wiring[0] === toRemove[0] && wiring[1] === toRemove[1]) ||
                 (wiring[0] === toRemove[1] && wiring[1] === toRemove[0])
-              )
+              ),
           );
         }
       });
@@ -182,7 +195,7 @@ const useEnigmaStore = create<EnigmaStore>()(
         state.output = "";
       });
     },
-  }))
+  })),
 );
 
 export const useEnigma = () => {
@@ -203,11 +216,9 @@ export const useEnigma = () => {
     ...state
   } = useEnigmaStore();
   const machineRef = useRef<Enigma | EnigmaM4>(new Enigma());
-  const reflectorRef = useRef<Reflector | undefined>(undefined);
   const uhrRef = useRef<Uhr | undefined>(undefined);
   const setMachineType = useCallback<typeof storeSetMachineType>(
     (type) => {
-      reflectorRef.current = undefined;
       uhrRef.current = undefined;
       if (type === "M3") {
         machineRef.current = new Enigma();
@@ -216,7 +227,7 @@ export const useEnigma = () => {
       }
       storeSetMachineType(type);
     },
-    [storeSetMachineType]
+    [storeSetMachineType],
   );
   const addPlugBoardWiring = useCallback<typeof storeAddPlugBoardWiring>(
     (wiring) => {
@@ -224,14 +235,14 @@ export const useEnigma = () => {
         machineRef.current
           .getPlugBoard()
           .plugWire(
-            uhrRef.current.prepareUhrWire(wirings.length + 1, ...wiring)
+            uhrRef.current.prepareUhrWire(wirings.length + 1, ...wiring),
           );
       } else {
         machineRef.current.getPlugBoard().plugWire(...wiring);
       }
       storeAddPlugBoardWiring(wiring);
     },
-    [wirings, storeAddPlugBoardWiring]
+    [wirings, storeAddPlugBoardWiring],
   );
 
   const removePlugBoardWiring = useCallback<typeof storeAddPlugBoardWiring>(
@@ -243,7 +254,7 @@ export const useEnigma = () => {
               !(
                 (wiring[0] === toRemove[0] && wiring[1] === toRemove[1]) ||
                 (wiring[0] === toRemove[1] && wiring[1] === toRemove[0])
-              )
+              ),
           ) + 1;
         if (index > 0) {
           machineRef.current
@@ -255,7 +266,7 @@ export const useEnigma = () => {
       }
       storeRemovePlugBoardWiring(wiring);
     },
-    [wirings, storeRemovePlugBoardWiring]
+    [wirings, storeRemovePlugBoardWiring],
   );
 
   const plugUhr = useCallback(() => {
@@ -280,7 +291,7 @@ export const useEnigma = () => {
         storeSetUhrSetting(uhrSetting);
       }
     },
-    [storeSetUhrSetting]
+    [storeSetUhrSetting],
   );
 
   const isPlugBoardValid = state.uhrSetting == null || wirings.length === 10;
@@ -321,31 +332,38 @@ export const useEnigma = () => {
           reflector = new ReflectorD();
         }
       }
-      reflectorRef.current = reflector;
       machineRef.current.setReflector(reflector);
+      if (
+        machineRef.current instanceof EnigmaM4 &&
+        !thinReflectors.includes(type)
+      ) {
+        machineRef.current.unsetRotor(EnigmaM4.FOURTH_ROTOR);
+      }
       storeSetReflectorType(type);
     },
-    [storeSetReflectorType]
+    [storeSetReflectorType],
   );
 
   const addReflectorWiring = useCallback<typeof storeAddReflectorWiring>(
     (wiring) => {
-      if (reflectorRef.current instanceof ReflectorD) {
-        reflectorRef.current.plugWireInAlliedNotation(...wiring);
+      const reflector = machineRef.current.getReflector();
+      if (reflector instanceof ReflectorD) {
+        reflector.plugWireInAlliedNotation(...wiring);
         storeAddReflectorWiring(wiring);
       }
     },
-    [storeAddReflectorWiring]
+    [storeAddReflectorWiring],
   );
 
   const removeReflectorWiring = useCallback<typeof storeRemoveReflectorWiring>(
     (wiring) => {
-      if (reflectorRef.current instanceof ReflectorD) {
-        reflectorRef.current.unplugWireInAlliedNotation(...wiring);
+      const reflector = machineRef.current.getReflector();
+      if (reflector instanceof ReflectorD) {
+        reflector.unplugWireInAlliedNotation(...wiring);
         storeRemoveReflectorWiring(wiring);
       }
     },
-    [storeRemoveReflectorWiring]
+    [storeRemoveReflectorWiring],
   );
 
   const setRotorType = useCallback<typeof storeSetRotorType>(
@@ -397,26 +415,27 @@ export const useEnigma = () => {
       machineRef.current.setRotor(rotorInstance, getRotorName(rotor));
       storeSetRotorType(rotor, type);
     },
-    [storeSetRotorType]
+    [storeSetRotorType],
   );
   const setRotorRingPosition = useCallback<typeof storeSetRotorRingPosition>(
     (rotor, ringPosition) => {
-      machineRef.current
-        .getRotor(getRotorName(rotor))
-        .setRingPosition(ringPosition);
-      storeSetRotorRingPosition(rotor, ringPosition);
+      const machineRotor = machineRef.current.getRotor(getRotorName(rotor));
+      if (machineRotor != null) {
+        machineRotor.setRingPosition(ringPosition);
+        storeSetRotorRingPosition(rotor, ringPosition);
+      }
     },
-    [storeSetRotorRingPosition]
+    [storeSetRotorRingPosition],
   );
   const setRotorWindowLetter = useCallback<typeof storeSetRotorWindowLetter>(
     (rotor, windowLetter) => {
       machineRef.current.setRotorWindowLetter(
         windowLetter,
-        getRotorName(rotor)
+        getRotorName(rotor),
       );
       storeSetRotorWindowLetter(rotor, windowLetter);
     },
-    [storeSetRotorWindowLetter]
+    [storeSetRotorWindowLetter],
   );
   const encode = useCallback(
     (input: string) => {
@@ -427,53 +446,67 @@ export const useEnigma = () => {
         fourth:
           type === "M4"
             ? {
-                ringPosition: machineRef.current.getRotor(EnigmaM4.FOURTH_ROTOR)
-                  .ringPosition,
+                ringPosition:
+                  machineRef.current.getRotor(EnigmaM4.FOURTH_ROTOR)
+                    ?.ringPosition ?? 0,
                 windowLetter: machineRef.current.getRotorWindowLetter(
-                  EnigmaM4.FOURTH_ROTOR
+                  EnigmaM4.FOURTH_ROTOR,
                 ),
               }
             : undefined,
         left: {
-          ringPosition: machineRef.current.getRotor(Enigma.LEFT_ROTOR)
-            .ringPosition,
+          ringPosition:
+            machineRef.current.getRotor(Enigma.LEFT_ROTOR)?.ringPosition ?? 0,
           windowLetter: machineRef.current.getRotorWindowLetter(
-            Enigma.LEFT_ROTOR
+            Enigma.LEFT_ROTOR,
           ),
         },
         center: {
-          ringPosition: machineRef.current.getRotor(Enigma.CENTER_ROTOR)
-            .ringPosition,
+          ringPosition:
+            machineRef.current.getRotor(Enigma.CENTER_ROTOR)?.ringPosition ?? 0,
           windowLetter: machineRef.current.getRotorWindowLetter(
-            Enigma.CENTER_ROTOR
+            Enigma.CENTER_ROTOR,
           ),
         },
         right: {
-          ringPosition: machineRef.current.getRotor(Enigma.RIGHT_ROTOR)
-            .ringPosition,
+          ringPosition:
+            machineRef.current.getRotor(Enigma.RIGHT_ROTOR)?.ringPosition ?? 0,
           windowLetter: machineRef.current.getRotorWindowLetter(
-            Enigma.RIGHT_ROTOR
+            Enigma.RIGHT_ROTOR,
           ),
         },
       });
     },
-    [update, type]
+    [update, type],
   );
 
   const isFourthRotorValid = Boolean(state.fourthRotor?.type);
   const isLeftRotorValid = Boolean(state.leftRotor?.type);
   const isCenterRotorValid = Boolean(state.centerRotor?.type);
   const isRightRotorValid = Boolean(state.rightRotor?.type);
+  const isFourthRotorVisible =
+    type === "M4" &&
+    (state.reflector?.type == null ||
+      thinReflectors.includes(state.reflector.type));
 
   const isReflectorValid = Boolean(
     state.reflector?.type &&
-      (state.reflector.type !== "D" || state.reflector.wirings.length === 12)
+    (state.reflector.type !== "D" || state.reflector.wirings.length === 12),
   );
+
+  const isMachineValid =
+    isReflectorValid &&
+    (type === "M3" || isFourthRotorValid || !isFourthRotorVisible) &&
+    isLeftRotorValid &&
+    isCenterRotorValid &&
+    isRightRotorValid &&
+    isPlugBoardValid;
 
   return {
     ...state,
     type,
     setMachineType,
+    isMachineValid,
     wirings,
     isPlugBoardValid,
     addPlugBoardWiring,
@@ -489,6 +522,7 @@ export const useEnigma = () => {
     isLeftRotorValid,
     isCenterRotorValid,
     isRightRotorValid,
+    isFourthRotorVisible,
     setRotorType,
     setRotorRingPosition,
     setRotorWindowLetter,

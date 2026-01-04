@@ -1,8 +1,8 @@
-import type { SwapperProps } from "./Swapper.models";
-import { Card, ListGroup } from "react-bootstrap";
-import SwapperWiring from "./components/SwapperWiring/SwapperWiring";
-import NewSwapperWiring from "./components/NewSwapperWiring/NewSwapperWiring";
 import type { Wiring } from "../Enigma/Enigma.models";
+import type { SwapperProps } from "./Swapper.models";
+import NewSwapperWiring from "./components/NewSwapperWiring/NewSwapperWiring";
+import SwapperWiring from "./components/SwapperWiring/SwapperWiring";
+import { Card, ListGroup } from "react-bootstrap";
 
 const Swapper = <T extends Wiring>({
   wirings,

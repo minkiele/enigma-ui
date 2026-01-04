@@ -1,34 +1,28 @@
-import type { FC } from "react";
-import type {
-  ReflectorType,
-  RotorType,
-  ThinReflectorType,
-  ThinRotorType,
-} from "../../models";
-import Reflector from "../WiredWheel/Reflector/Reflector";
-import ThinReflector from "../WiredWheel/ThinReflector/ThinReflector";
-import { Card, Col, Row } from "react-bootstrap";
-import TypeSelector from "../TypeSelector/TypeSelector";
-import Rotor from "../WiredWheel/Rotor/Rotor";
-import { useEnigma } from "./Enigma.utils";
-import type { TypeSelectorProps } from "../TypeSelector/TypeSelector.models";
-import type { BaseReflectorProps } from "../WiredWheel/components/BaseReflector/BaseReflector.models";
-import ThinRotor from "../WiredWheel/ThinRotor/ThinRotor";
-import type { RotorIdentifier } from "./Enigma.models";
-import PlugBoard from "../PlugBoard/PlugBoard";
-import type { PlugBoardProps } from "../PlugBoard/PlugBoard.models";
-import type { BaseRotorProps } from "../WiredWheel/components/BaseRotor/BaseRotor.models";
+import type { RotorType, ThinRotorType } from "../../models";
 import Keyboard from "../Keyboard/Keyboard";
 import type { KeyboardProps } from "../Keyboard/Keyboard.models";
-import classNames from "classnames";
-import type { ReflectorProps } from "../WiredWheel/Reflector/Reflector.models";
+import PlugBoard from "../PlugBoard/PlugBoard";
+import type { PlugBoardProps } from "../PlugBoard/PlugBoard.models";
+import TypeSelector from "../TypeSelector/TypeSelector";
+import type { TypeSelectorProps } from "../TypeSelector/TypeSelector.models";
 import Uhr from "../Uhr/Uhr";
 import type { UhrProps } from "../Uhr/Uhr.models";
+import Reflector from "../WiredWheel/Reflector/Reflector";
+import type { ReflectorProps } from "../WiredWheel/Reflector/Reflector.models";
+import Rotor from "../WiredWheel/Rotor/Rotor";
+import ThinRotor from "../WiredWheel/ThinRotor/ThinRotor";
+import type { BaseRotorProps } from "../WiredWheel/components/BaseRotor/BaseRotor.models";
+import type { RotorIdentifier } from "./Enigma.models";
+import { useEnigma } from "./Enigma.utils";
+import classNames from "classnames";
+import type { FC } from "react";
+import { Card, Col, Row } from "react-bootstrap";
 
 const Enigma: FC = () => {
   const {
     type,
     setMachineType,
+    isMachineValid,
     reflector,
     isReflectorValid,
     setReflectorType,
@@ -42,6 +36,7 @@ const Enigma: FC = () => {
     isCenterRotorValid,
     rightRotor,
     isRightRotorValid,
+    isFourthRotorVisible,
     setRotorType,
     setRotorRingPosition,
     setRotorWindowLetter,
@@ -63,27 +58,25 @@ const Enigma: FC = () => {
     setMachineType(type);
   };
 
-  const handleChangeReflector: BaseReflectorProps<
-    ReflectorType | ThinReflectorType
-  >["onChangeType"] = (_, type) => {
+  const handleChangeReflector: ReflectorProps["onChangeType"] = (_, type) => {
     setReflectorType(type);
   };
 
   const handleAddReflectorWiring: ReflectorProps["onAddWiring"] = (
     _,
-    wiring
+    wiring,
   ) => {
     addReflectorWiring(wiring);
   };
 
   const handleRemoveReflectorWiring: ReflectorProps["onRemoveWiring"] = (
     _,
-    wiring
+    wiring,
   ) => {
     removeReflectorWiring(wiring);
   };
 
-  const rotorColsAttrs = { xs: 12, md: type === "M3" ? 4 : 3 };
+  const rotorColsAttrs = { xs: 12, md: isFourthRotorVisible ? 3 : 4 };
 
   const getUsedRotors = (exclude: RotorIdentifier) => {
     const usedRotors: Array<RotorType> = [];
@@ -101,7 +94,7 @@ const Enigma: FC = () => {
 
   const handleChangeRotorType =
     (
-      rotor: RotorIdentifier
+      rotor: RotorIdentifier,
     ): BaseRotorProps<RotorType | ThinRotorType>["onChangeRotorType"] =>
     (_, type) => {
       setRotorType(rotor, type);
@@ -109,7 +102,7 @@ const Enigma: FC = () => {
 
   const handleChangeRotorRingPosition =
     (
-      rotor: RotorIdentifier
+      rotor: RotorIdentifier,
     ): BaseRotorProps<RotorType | ThinRotorType>["onChangeRingPosition"] =>
     (_, ringPosition) => {
       setRotorRingPosition(rotor, ringPosition);
@@ -117,7 +110,7 @@ const Enigma: FC = () => {
 
   const handleChangeWindowLetter =
     (
-      rotor: RotorIdentifier
+      rotor: RotorIdentifier,
     ): BaseRotorProps<RotorType | ThinRotorType>["onChangeWindowLetter"] =>
     (_, windowLetter) => {
       setRotorWindowLetter(rotor, windowLetter);
@@ -125,14 +118,14 @@ const Enigma: FC = () => {
 
   const handleAddPlugBoardWiring: PlugBoardProps["onAddWiring"] = (
     _,
-    wiring
+    wiring,
   ) => {
     addPlugBoardWiring(wiring);
   };
 
   const handleRemovePlugBoardWiring: PlugBoardProps["onRemoveWiring"] = (
     _,
-    wiring
+    wiring,
   ) => {
     removePlugBoardWiring(wiring);
   };
@@ -171,24 +164,18 @@ const Enigma: FC = () => {
             {type === "M3" ? "Reflector" : "Thin reflector"}
           </Card.Header>
           <Card.Body>
-            {type === "M3" ? (
-              <Reflector
-                value={reflector?.type as ReflectorType | undefined}
-                onChangeType={handleChangeReflector}
-                wirings={reflector?.wirings}
-                onAddWiring={handleAddReflectorWiring}
-                onRemoveWiring={handleRemoveReflectorWiring}
-              />
-            ) : (
-              <ThinReflector
-                value={reflector?.type as ThinReflectorType | undefined}
-                onChangeType={handleChangeReflector}
-              />
-            )}
+            <Reflector
+              value={reflector?.type}
+              all={type === "M4"}
+              onChangeType={handleChangeReflector}
+              wirings={reflector?.wirings}
+              onAddWiring={handleAddReflectorWiring}
+              onRemoveWiring={handleRemoveReflectorWiring}
+            />
           </Card.Body>
         </Card>
         <Row className="mb-3">
-          {type === "M4" && (
+          {isFourthRotorVisible && (
             <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
               <Card>
                 <Card.Header
@@ -205,7 +192,7 @@ const Enigma: FC = () => {
                     windowLetter={fourthRotor?.windowLetter}
                     onChangeRotorType={handleChangeRotorType("fourth")}
                     onChangeRingPosition={handleChangeRotorRingPosition(
-                      "fourth"
+                      "fourth",
                     )}
                     onChangeWindowLetter={handleChangeWindowLetter("fourth")}
                   />
@@ -314,16 +301,7 @@ const Enigma: FC = () => {
             output={output}
             onInput={handleInput}
             onReset={clear}
-            disabled={
-              !(
-                isReflectorValid &&
-                (type === "M3" || isFourthRotorValid) &&
-                isLeftRotorValid &&
-                isCenterRotorValid &&
-                isRightRotorValid &&
-                isPlugBoardValid
-              )
-            }
+            disabled={!isMachineValid}
           />
         </Card.Body>
       </Card>

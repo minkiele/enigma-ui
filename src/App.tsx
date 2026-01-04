@@ -1,7 +1,7 @@
-import type { FC } from "react";
-import { Container } from "react-bootstrap";
 import Enigma from "./components/Enigma/Enigma";
 import "./styles.scss";
+import type { FC } from "react";
+import { Container } from "react-bootstrap";
 
 const App: FC = () => (
   <Container>

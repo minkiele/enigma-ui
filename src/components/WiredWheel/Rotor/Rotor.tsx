@@ -1,7 +1,7 @@
-import { useMemo, type FC } from "react";
-import type { RotorProps } from "./Rotor.models";
 import BaseRotor from "../components/BaseRotor/BaseRotor";
+import type { RotorProps } from "./Rotor.models";
 import { rotorTypes } from "./Rotor.utils";
+import { useMemo, type FC } from "react";
 
 const Rotor: FC<RotorProps> = ({ usedRotors, ...props }) => {
   const options = useMemo(
@@ -10,7 +10,7 @@ const Rotor: FC<RotorProps> = ({ usedRotors, ...props }) => {
         ...option,
         disabled: usedRotors.includes(option.value),
       })),
-    [usedRotors]
+    [usedRotors],
   );
   return <BaseRotor {...props} options={options} />;
 };
