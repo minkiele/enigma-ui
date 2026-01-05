@@ -42,23 +42,20 @@ const NewSwapperWiring = <T extends Wiring>({
       .concat(add ? add : []);
 
   const renderAlphabet = (disabledLetters?: string | Array<string>) => {
-    const alphabet = [];
-
     const forbiddenLetters = getForbiddenLetters(disabledLetters);
 
-    for (let i = 0; i < 26; i += 1) {
+    return Array.from({ length: 26 }).map((_, i) => {
       const letter = getLetter(i);
-      alphabet.push(
+      return (
         <option
           key={letter.toString()}
           disabled={forbiddenLetters.includes(letter)}
           value={letter}
         >
           {letter}
-        </option>,
+        </option>
       );
-    }
-    return alphabet;
+    });
   };
 
   const handleAddWiring: MouseEventHandler<HTMLButtonElement> = (evt) => {
@@ -72,7 +69,7 @@ const NewSwapperWiring = <T extends Wiring>({
 
   return (
     <Row className="enigmaSwapperWiring">
-      <Col xs={12} sm={5}>
+      <Col xs={12} sm={5} className="mb-3 mb-sm-0">
         <Form.Group controlId={plug0Id}>
           <Form.Label visuallyHidden>First letter</Form.Label>
           <Form.Select
@@ -85,7 +82,7 @@ const NewSwapperWiring = <T extends Wiring>({
           </Form.Select>
         </Form.Group>
       </Col>
-      <Col xs={12} sm={5}>
+      <Col xs={12} sm={5} className="mb-3 mb-sm-0">
         <Form.Group controlId={plug1Id}>
           <Form.Label visuallyHidden>Second letter</Form.Label>
           <Form.Select

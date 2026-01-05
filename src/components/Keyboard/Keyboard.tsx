@@ -48,9 +48,9 @@ const Keyboard: FC<KeyboardProps> = ({
   };
 
   return (
-    <div className="keyboard">
+    <div>
       <Row className="mb-3">
-        <Col className="keyboardInput" xs={12} md={2}>
+        <Col className="mb-3 mb-md-0" xs={12} md={4} lg={2}>
           <Form.Group controlId={inputId}>
             <div className={output.length ? "input-group" : undefined}>
               <Form.Control
@@ -72,18 +72,18 @@ const Keyboard: FC<KeyboardProps> = ({
             </div>
           </Form.Group>
         </Col>
-        <Col className="keyboardInput" xs={12} md={5}>
+        <Col className="mb-3 mb-md-0" xs={12} md={4} lg={5}>
           <strong>Input:</strong>&nbsp;
           <code>{isGroupBy ? getGroupedLetters(input) : input}</code>
         </Col>
-        <Col className="keyboardOutput" xs={12} md={5}>
+        <Col xs={12} md={4} lg={5}>
           <strong>Output:</strong>&nbsp;
           <code>{isGroupBy ? getGroupedLetters(output) : output}</code>
         </Col>
       </Row>
       <Row>
-        <Col className="keyboardOutput" xs={12} md={2}>
-          <Form.Group className="splitSize" controlId={groupById}>
+        <Col xs={12} md={4} lg={2}>
+          <Form.Group controlId={groupById}>
             <Form.Label>Group output by</Form.Label>
             <Form.Control
               type="number"

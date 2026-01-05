@@ -164,14 +164,23 @@ const Enigma: FC = () => {
             {type === "M3" ? "Reflector" : "Thin reflector"}
           </Card.Header>
           <Card.Body>
-            <Reflector
-              value={reflector?.type}
-              all={type === "M4"}
-              onChangeType={handleChangeReflector}
-              wirings={reflector?.wirings}
-              onAddWiring={handleAddReflectorWiring}
-              onRemoveWiring={handleRemoveReflectorWiring}
-            />
+            <div className={classNames({ "mb-3": reflector?.type === "D" })}>
+              <Reflector
+                value={reflector?.type}
+                all={type === "M4"}
+                onChangeType={handleChangeReflector}
+                wirings={reflector?.wirings}
+                onAddWiring={handleAddReflectorWiring}
+                onRemoveWiring={handleRemoveReflectorWiring}
+              />
+            </div>
+            {reflector?.type === "D" && (
+              <p>
+                For the Reflector D to work properly all the internal wirings
+                must be plugged in. They follow the principle of the Plugboard,
+                but they are placed inside the Reflector.
+              </p>
+            )}
           </Card.Body>
         </Card>
         <Row className="mb-3">
@@ -265,6 +274,17 @@ const Enigma: FC = () => {
         </Row>
       </div>
       <Card className="mb-3">
+        <Card.Header className="bg-info-subtle">Uhr</Card.Header>
+        <Card.Body>
+          <Uhr
+            uhrSetting={uhrSetting}
+            onPlugUhr={handlePlugUhr}
+            onUnplugUhr={handleUnplugUhr}
+            onSetUhrSetting={handleSetUhrSetting}
+          />
+        </Card.Body>
+      </Card>
+      <Card className="mb-3">
         <Card.Header
           className={classNames({
             "bg-info-subtle": uhrSetting == null,
@@ -274,23 +294,24 @@ const Enigma: FC = () => {
           Plugboard
         </Card.Header>
         <Card.Body>
-          <PlugBoard
-            wirings={wirings}
-            onAddWiring={handleAddPlugBoardWiring}
-            onRemoveWiring={handleRemovePlugBoardWiring}
-            lifo={uhrSetting != null}
-          />
-        </Card.Body>
-      </Card>
-      <Card className="mb-3">
-        <Card.Header className="bg-info-subtle">Uhr</Card.Header>
-        <Card.Body>
-          <Uhr
-            uhrSetting={uhrSetting}
-            onPlugUhr={handlePlugUhr}
-            onUnplugUhr={handleUnplugUhr}
-            onSetUhrSetting={handleSetUhrSetting}
-          />
+          <div className={classNames({ "mb-3": uhrSetting != null })}>
+            <PlugBoard
+              wirings={wirings}
+              onAddWiring={handleAddPlugBoardWiring}
+              onRemoveWiring={handleRemovePlugBoardWiring}
+              lifo={uhrSetting != null}
+            />
+          </div>
+          {uhrSetting != null && (
+            <p>
+              For the Uhr to work properly you must{" "}
+              <em>plug in all the cables</em>. In order. Left side letter
+              represents the <em>red</em> connector, right side letter
+              represents the <em>black</em> connector. The numbering follows the
+              red side. That's why you can remove only the last couple (I'm lazy
+              and I didn't want to track all the empty numbers).
+            </p>
+          )}
         </Card.Body>
       </Card>
       <Card className="mb-3">
