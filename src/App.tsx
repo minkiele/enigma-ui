@@ -1,7 +1,8 @@
-import Enigma from "./components/Enigma/Enigma";
 import "./styles.scss";
-import type { FC } from "react";
+import { lazy, Suspense, type FC } from "react";
 import { Container } from "react-bootstrap";
+
+const Enigma = lazy(() => import("./components/Enigma/Enigma"));
 
 const App: FC = () => (
   <Container>
@@ -14,7 +15,9 @@ const App: FC = () => (
       starting to be a challenge because I had to rewrite all the code into a
       modern language. Thanks for the '25s Christmas holidays!
     </p>
-    <Enigma />
+    <Suspense fallback={<p>Loading Enigma...</p>}>
+      <Enigma />
+    </Suspense>
   </Container>
 );
 
