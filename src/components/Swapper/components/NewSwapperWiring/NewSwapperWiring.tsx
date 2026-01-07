@@ -68,15 +68,11 @@ const NewSwapperWiring = <T extends Wiring>({
   const forbidden = useMemo(() => forbiddenProp ?? [], [forbiddenProp]);
 
   return (
-    <Row className="enigmaSwapperWiring">
+    <Row>
       <Col xs={12} sm={5} className="mb-3 mb-sm-0">
         <Form.Group controlId={plug0Id}>
           <Form.Label visuallyHidden>First letter</Form.Label>
-          <Form.Select
-            className="select"
-            value={wiring[0]}
-            onChange={handleUpdatePlug(0)}
-          >
+          <Form.Select value={wiring[0]} onChange={handleUpdatePlug(0)}>
             <option value=""></option>
             {renderAlphabet([...forbidden, wiring[1]])}
           </Form.Select>
@@ -85,11 +81,7 @@ const NewSwapperWiring = <T extends Wiring>({
       <Col xs={12} sm={5} className="mb-3 mb-sm-0">
         <Form.Group controlId={plug1Id}>
           <Form.Label visuallyHidden>Second letter</Form.Label>
-          <Form.Select
-            className="select"
-            value={wiring[1]}
-            onChange={handleUpdatePlug(1)}
-          >
+          <Form.Select value={wiring[1]} onChange={handleUpdatePlug(1)}>
             <option value=""></option>
             {renderAlphabet([...forbidden, wiring[0]])}
           </Form.Select>

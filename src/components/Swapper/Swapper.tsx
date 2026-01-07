@@ -12,9 +12,9 @@ const Swapper = <T extends Wiring>({
   forbidden,
   lifo,
 }: SwapperProps<T>) => (
-  <div className="swapper">
+  <div>
     {wirings.length > 0 && (
-      <ListGroup className="swapper-wirings mb-3">
+      <ListGroup className="mb-3">
         {wirings.map((wiring, index) => (
           <ListGroup.Item key={`${wiring[0]}${wiring[1]}`}>
             <SwapperWiring
@@ -27,7 +27,7 @@ const Swapper = <T extends Wiring>({
       </ListGroup>
     )}
     {(limit == null || wirings.length < limit) && (
-      <Card body className="swapper-wiring bg-light">
+      <Card body className="bg-secondary-subtle">
         <p>New Wiring</p>
         <NewSwapperWiring
           wirings={wirings}

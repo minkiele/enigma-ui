@@ -37,14 +37,10 @@ const BaseRotor = <T extends RotorType | ThinRotorType>({
   };
 
   return (
-    <div className="enigmaRotor">
-      <Form.Group className="enigmaRotorType mb-3" controlId={rotorTypeId}>
+    <div>
+      <Form.Group className="mb-3" controlId={rotorTypeId}>
         <Form.Label>Type</Form.Label>
-        <Form.Select
-          className="select"
-          value={value ?? ""}
-          onChange={handleChangeRotorType}
-        >
+        <Form.Select value={value ?? ""} onChange={handleChangeRotorType}>
           {value == null && <option value="">Choose a rotor</option>}
           {options.map(({ value, label, disabled }) => (
             <option key={value} value={value} disabled={disabled}>
@@ -53,13 +49,9 @@ const BaseRotor = <T extends RotorType | ThinRotorType>({
           ))}
         </Form.Select>
       </Form.Group>
-      <Form.Group
-        className="enigmaRotorRingPosition mb-3"
-        controlId={ringPositionId}
-      >
+      <Form.Group className="mb-3" controlId={ringPositionId}>
         <Form.Label>Ring Position</Form.Label>
         <Form.Select
-          className="select"
           value={ringPosition}
           onChange={handleChangeRingPosition}
           disabled={value == null}
@@ -67,10 +59,7 @@ const BaseRotor = <T extends RotorType | ThinRotorType>({
           {ringPositions}
         </Form.Select>
       </Form.Group>
-      <Form.Group
-        className="enigmaRotorWindowLetter"
-        controlId={windowLetterId}
-      >
+      <Form.Group controlId={windowLetterId}>
         <Form.Label>Window Position</Form.Label>
         <Form.Control
           type="text"

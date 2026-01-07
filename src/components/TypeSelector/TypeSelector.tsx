@@ -11,7 +11,7 @@ const TypeSelector: FC<TypeSelectorProps> = ({ type, onChangeType }) => {
   return (
     <Form.Group controlId={id}>
       <Form.Label>Type</Form.Label>
-      <Form.Select className="select" value={type} onChange={handleChange}>
+      <Form.Select value={type} onChange={handleChange}>
         <option value="M3">Enigma M3</option>
         <option value="M4">Enigma M4</option>
       </Form.Select>

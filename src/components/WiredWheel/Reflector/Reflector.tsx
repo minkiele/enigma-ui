@@ -25,36 +25,30 @@ const Reflector: FC<ReflectorProps> = ({
     onChangeType(evt, evt.target.value as NonNullable<typeof value>);
   };
   return (
-    <div className="enigmaReflector">
-      <div className="enigmaReflectorType">
-        <Form.Group controlId={id}>
-          <Form.Label>Type</Form.Label>
-          <Form.Select
-            className="select"
-            value={value ?? ""}
-            onChange={handleChangeType}
-          >
-            {value == null && <option value="">Choose a reflector</option>}
-            {options.map((reflector) => (
-              <option key={reflector} value={reflector}>
-                {reflector}
-              </option>
-            ))}
-          </Form.Select>
-        </Form.Group>
-        {value === "D" && (
-          <Card className="mt-3">
-            <Card.Header>Reflector D Wirings</Card.Header>
-            <Card.Body>
-              <ReflectorD
-                wirings={wirings ?? []}
-                onAddWiring={onAddWiring}
-                onRemoveWiring={onRemoveWiring}
-              />
-            </Card.Body>
-          </Card>
-        )}
-      </div>
+    <div>
+      <Form.Group controlId={id}>
+        <Form.Label>Type</Form.Label>
+        <Form.Select value={value ?? ""} onChange={handleChangeType}>
+          {value == null && <option value="">Choose a reflector</option>}
+          {options.map((reflector) => (
+            <option key={reflector} value={reflector}>
+              {reflector}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+      {value === "D" && (
+        <Card className="mt-3">
+          <Card.Header>Reflector D Wirings</Card.Header>
+          <Card.Body>
+            <ReflectorD
+              wirings={wirings ?? []}
+              onAddWiring={onAddWiring}
+              onRemoveWiring={onRemoveWiring}
+            />
+          </Card.Body>
+        </Card>
+      )}
     </div>
   );
 };

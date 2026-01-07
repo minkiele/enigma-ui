@@ -147,132 +147,128 @@ const Enigma: FC = () => {
   };
 
   return (
-    <div className="enigmaUI">
+    <div>
       <Card className="mb-3">
         <Card.Header className="bg-info-subtle">Machine type</Card.Header>
         <Card.Body>
           <TypeSelector type={type} onChangeType={handleChangeType} />
         </Card.Body>
       </Card>
-      <div className="enigmaConfiguration">
-        <Card className={classNames("mb-3")}>
-          <Card.Header
-            className={classNames({
-              "text-bg-success": isReflectorValid,
-            })}
-          >
-            {type === "M3" ? "Reflector" : "Thin reflector"}
-          </Card.Header>
-          <Card.Body>
-            <div className={classNames({ "mb-3": reflector?.type === "D" })}>
-              <Reflector
-                value={reflector?.type}
-                all={type === "M4"}
-                onChangeType={handleChangeReflector}
-                wirings={reflector?.wirings}
-                onAddWiring={handleAddReflectorWiring}
-                onRemoveWiring={handleRemoveReflectorWiring}
-              />
-            </div>
-            {reflector?.type === "D" && (
-              <p>
-                For the Reflector D to work properly all the internal wirings
-                must be plugged in. They follow the principle of the Plugboard,
-                but they are placed inside the Reflector.
-              </p>
-            )}
-          </Card.Body>
-        </Card>
-        <Row className="mb-3">
-          {isFourthRotorVisible && (
-            <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
-              <Card>
-                <Card.Header
-                  className={classNames({
-                    "text-bg-success": isFourthRotorValid,
-                  })}
-                >
-                  Fourth Rotor
-                </Card.Header>
-                <Card.Body>
-                  <ThinRotor
-                    value={fourthRotor?.type}
-                    ringPosition={fourthRotor?.ringPosition}
-                    windowLetter={fourthRotor?.windowLetter}
-                    onChangeRotorType={handleChangeRotorType("fourth")}
-                    onChangeRingPosition={handleChangeRotorRingPosition(
-                      "fourth",
-                    )}
-                    onChangeWindowLetter={handleChangeWindowLetter("fourth")}
-                  />
-                </Card.Body>
-              </Card>
-            </Col>
+      <Card className="mb-3">
+        <Card.Header
+          className={classNames({
+            "text-bg-success": isReflectorValid,
+          })}
+        >
+          {type === "M3" ? "Reflector" : "Thin reflector"}
+        </Card.Header>
+        <Card.Body>
+          <div className={classNames({ "mb-3": reflector?.type === "D" })}>
+            <Reflector
+              value={reflector?.type}
+              all={type === "M4"}
+              onChangeType={handleChangeReflector}
+              wirings={reflector?.wirings}
+              onAddWiring={handleAddReflectorWiring}
+              onRemoveWiring={handleRemoveReflectorWiring}
+            />
+          </div>
+          {reflector?.type === "D" && (
+            <p>
+              For the Reflector D to work properly all the internal wirings must
+              be plugged in. They follow the principle of the Plugboard, but
+              they are placed inside the Reflector.
+            </p>
           )}
-          <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
-            <Card>
-              <Card.Header
-                className={classNames({ "text-bg-success": isLeftRotorValid })}
-              >
-                Left Rotor
-              </Card.Header>
-              <Card.Body>
-                <Rotor
-                  value={leftRotor?.type}
-                  ringPosition={leftRotor?.ringPosition}
-                  windowLetter={leftRotor?.windowLetter}
-                  onChangeRotorType={handleChangeRotorType("left")}
-                  onChangeRingPosition={handleChangeRotorRingPosition("left")}
-                  onChangeWindowLetter={handleChangeWindowLetter("left")}
-                  usedRotors={getUsedRotors("left")}
-                />
-              </Card.Body>
-            </Card>
-          </Col>
+        </Card.Body>
+      </Card>
+      <Row className="mb-3">
+        {isFourthRotorVisible && (
           <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
             <Card>
               <Card.Header
                 className={classNames({
-                  "text-bg-success": isCenterRotorValid,
+                  "text-bg-success": isFourthRotorValid,
                 })}
               >
-                Center Rotor
+                Fourth Rotor
               </Card.Header>
               <Card.Body>
-                <Rotor
-                  value={centerRotor?.type}
-                  ringPosition={centerRotor?.ringPosition}
-                  windowLetter={centerRotor?.windowLetter}
-                  onChangeRotorType={handleChangeRotorType("center")}
-                  onChangeRingPosition={handleChangeRotorRingPosition("center")}
-                  onChangeWindowLetter={handleChangeWindowLetter("center")}
-                  usedRotors={getUsedRotors("center")}
+                <ThinRotor
+                  value={fourthRotor?.type}
+                  ringPosition={fourthRotor?.ringPosition}
+                  windowLetter={fourthRotor?.windowLetter}
+                  onChangeRotorType={handleChangeRotorType("fourth")}
+                  onChangeRingPosition={handleChangeRotorRingPosition("fourth")}
+                  onChangeWindowLetter={handleChangeWindowLetter("fourth")}
                 />
               </Card.Body>
             </Card>
           </Col>
-          <Col {...rotorColsAttrs}>
-            <Card>
-              <Card.Header
-                className={classNames({ "text-bg-success": isRightRotorValid })}
-              >
-                Right Rotor
-              </Card.Header>
-              <Card.Body>
-                <Rotor
-                  value={rightRotor?.type}
-                  ringPosition={rightRotor?.ringPosition}
-                  windowLetter={rightRotor?.windowLetter}
-                  onChangeRotorType={handleChangeRotorType("right")}
-                  onChangeRingPosition={handleChangeRotorRingPosition("right")}
-                  onChangeWindowLetter={handleChangeWindowLetter("right")}
-                  usedRotors={getUsedRotors("right")}
-                />
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+        )}
+        <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
+          <Card>
+            <Card.Header
+              className={classNames({ "text-bg-success": isLeftRotorValid })}
+            >
+              Left Rotor
+            </Card.Header>
+            <Card.Body>
+              <Rotor
+                value={leftRotor?.type}
+                ringPosition={leftRotor?.ringPosition}
+                windowLetter={leftRotor?.windowLetter}
+                onChangeRotorType={handleChangeRotorType("left")}
+                onChangeRingPosition={handleChangeRotorRingPosition("left")}
+                onChangeWindowLetter={handleChangeWindowLetter("left")}
+                usedRotors={getUsedRotors("left")}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col {...rotorColsAttrs} className="mb-3 mb-md-0">
+          <Card>
+            <Card.Header
+              className={classNames({
+                "text-bg-success": isCenterRotorValid,
+              })}
+            >
+              Center Rotor
+            </Card.Header>
+            <Card.Body>
+              <Rotor
+                value={centerRotor?.type}
+                ringPosition={centerRotor?.ringPosition}
+                windowLetter={centerRotor?.windowLetter}
+                onChangeRotorType={handleChangeRotorType("center")}
+                onChangeRingPosition={handleChangeRotorRingPosition("center")}
+                onChangeWindowLetter={handleChangeWindowLetter("center")}
+                usedRotors={getUsedRotors("center")}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col {...rotorColsAttrs}>
+          <Card>
+            <Card.Header
+              className={classNames({ "text-bg-success": isRightRotorValid })}
+            >
+              Right Rotor
+            </Card.Header>
+            <Card.Body>
+              <Rotor
+                value={rightRotor?.type}
+                ringPosition={rightRotor?.ringPosition}
+                windowLetter={rightRotor?.windowLetter}
+                onChangeRotorType={handleChangeRotorType("right")}
+                onChangeRingPosition={handleChangeRotorRingPosition("right")}
+                onChangeWindowLetter={handleChangeWindowLetter("right")}
+                usedRotors={getUsedRotors("right")}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
       <Card className="mb-3">
         <Card.Header className="bg-info-subtle">Uhr</Card.Header>
         <Card.Body>
@@ -314,7 +310,7 @@ const Enigma: FC = () => {
           )}
         </Card.Body>
       </Card>
-      <Card className="mb-3">
+      <Card>
         <Card.Header className="bg-info-subtle">Keyboard</Card.Header>
         <Card.Body>
           <Keyboard

@@ -34,7 +34,7 @@ import {
 } from "enigma-minkiele";
 import Reflector from "enigma-minkiele/enigma/Component/WiredWheel/Reflector/Reflector";
 import type Rotor from "enigma-minkiele/enigma/Component/WiredWheel/Rotor/Rotor";
-import { useCallback, useRef } from "react";
+import { useCallback, useDebugValue, useRef } from "react";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -502,7 +502,7 @@ export const useEnigma = () => {
     isRightRotorValid &&
     isPlugBoardValid;
 
-  return {
+  const hookReturnValue = {
     ...state,
     type,
     setMachineType,
@@ -528,4 +528,8 @@ export const useEnigma = () => {
     setRotorWindowLetter,
     encode,
   };
+
+  useDebugValue(hookReturnValue);
+
+  return hookReturnValue;
 };

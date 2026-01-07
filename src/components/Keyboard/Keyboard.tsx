@@ -1,5 +1,6 @@
 import type { KeyboardProps } from "./Keyboard.models";
 import { DEFAULT_GROUP_BY } from "./Keyboard.utils";
+import classNames from "classnames";
 import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import {
   useId,
@@ -49,10 +50,10 @@ const Keyboard: FC<KeyboardProps> = ({
 
   return (
     <div>
-      <Row className="mb-3">
+      <Row>
         <Col className="mb-3 mb-md-0" xs={12} md={4} lg={2}>
           <Form.Group controlId={inputId}>
-            <div className={output.length ? "input-group" : undefined}>
+            <div className={classNames({ "input-group": output.length })}>
               <Form.Control
                 type="text"
                 value=""
