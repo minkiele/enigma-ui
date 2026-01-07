@@ -50,10 +50,11 @@ const Keyboard: FC<KeyboardProps> = ({
 
   return (
     <div>
-      <Row>
+      <Row className="mb-3">
         <Col className="mb-3 mb-md-0" xs={12} md={4} lg={2}>
           <Form.Group controlId={inputId}>
             <div className={classNames({ "input-group": output.length })}>
+              <Form.Label visuallyHidden>Type in the text to encode</Form.Label>
               <Form.Control
                 type="text"
                 value=""
