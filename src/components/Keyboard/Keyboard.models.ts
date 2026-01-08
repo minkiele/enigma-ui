@@ -1,9 +1,15 @@
-import type { ChangeEvent, MouseEventHandler } from "react";
+import type {
+  ChangeEvent,
+  KeyboardEventHandler,
+  MouseEventHandler,
+} from "react";
 
 export interface KeyboardProps {
   input: string;
   output: string;
   disabled?: boolean;
+  backspaceEnabled?: boolean;
   onInput: (evt: ChangeEvent<HTMLInputElement>, input: string) => void;
+  onBackspace: KeyboardEventHandler<HTMLInputElement>;
   onReset?: MouseEventHandler<HTMLButtonElement>;
 }

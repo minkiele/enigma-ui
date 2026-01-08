@@ -8,6 +8,7 @@ import type {
   EnigmaState,
   EnigmaStore,
   RotorIdentifier,
+  Wiring,
 } from "./Enigma.models";
 import {
   Enigma,
@@ -49,6 +50,7 @@ const initialState: EnigmaState = {
   uhrSetting: undefined,
   input: "",
   output: "",
+  history: [],
 };
 
 const getRotorName = (rotor: RotorIdentifier) => {
@@ -73,6 +75,32 @@ export const thinReflectors: Array<ReflectorType | ThinReflectorType> = [
   "Thin C",
 ];
 
+const matchRemovabileWirings = (wiring: Wiring) => (toRemove: Wiring) =>
+  !(
+    (wiring[0] === toRemove[0] && wiring[1] === toRemove[1]) ||
+    (wiring[0] === toRemove[1] && wiring[1] === toRemove[0])
+  );
+
+const restoreStoreWindowLetters = (state: EnigmaState, index: number) => {
+  if (state.history.length > 0 && index >= 0 && index < state.history.length) {
+    const entry = state.history[index];
+    if (entry) {
+      if (state.fourthRotor && entry.fourth) {
+        state.fourthRotor.windowLetter = entry.fourth;
+      }
+      if (state.leftRotor && entry.left) {
+        state.leftRotor.windowLetter = entry.left;
+      }
+      if (state.centerRotor && entry.center) {
+        state.centerRotor.windowLetter = entry.center;
+      }
+      if (state.rightRotor && entry.right) {
+        state.rightRotor.windowLetter = entry.right;
+      }
+    }
+  }
+};
+
 const useEnigmaStore = create<EnigmaStore>()(
   immer((set) => ({
     ...initialState,
@@ -91,6 +119,8 @@ const useEnigmaStore = create<EnigmaStore>()(
             windowLetter: "A",
           };
         }
+        // Changing rotor resets history as it would be inconsistent with the actual state
+        state.history = [];
       });
     },
     addPlugBoardWiring: (wiring) => {
@@ -102,6 +132,12 @@ const useEnigmaStore = create<EnigmaStore>()(
       set((state) => {
         state.input += input;
         state.output += output;
+        state.history.push({
+          fourth: state.fourthRotor?.windowLetter,
+          left: state.leftRotor?.windowLetter,
+          center: state.centerRotor?.windowLetter,
+          right: state.rightRotor?.windowLetter,
+        });
         if (state.fourthRotor && fourth) {
           state.fourthRotor = { ...state.fourthRotor, ...fourth };
         }
@@ -118,13 +154,7 @@ const useEnigmaStore = create<EnigmaStore>()(
     },
     removePlugBoardWiring: (wiring) => {
       set((state) => {
-        state.wirings = state.wirings.filter(
-          (toRemove) =>
-            !(
-              (wiring[0] === toRemove[0] && wiring[1] === toRemove[1]) ||
-              (wiring[0] === toRemove[1] && wiring[1] === toRemove[0])
-            ),
-        );
+        state.wirings = state.wirings.filter(matchRemovabileWirings(wiring));
       });
     },
     plugUhr: () => {
@@ -164,11 +194,7 @@ const useEnigmaStore = create<EnigmaStore>()(
       set((state) => {
         if (state.reflector) {
           state.reflector.wirings = state.reflector.wirings.filter(
-            (toRemove) =>
-              !(
-                (wiring[0] === toRemove[0] && wiring[1] === toRemove[1]) ||
-                (wiring[0] === toRemove[1] && wiring[1] === toRemove[0])
-              ),
+            matchRemovabileWirings(wiring),
           );
         }
       });
@@ -186,6 +212,7 @@ const useEnigmaStore = create<EnigmaStore>()(
         const key: `${RotorIdentifier}Rotor` = `${rotor}Rotor`;
         if (state[key] != null) {
           state[key].windowLetter = windowLetter;
+          state.history = [];
         }
       });
     },
@@ -193,6 +220,20 @@ const useEnigmaStore = create<EnigmaStore>()(
       set((state) => {
         state.input = "";
         state.output = "";
+        if (state.history.length > 0) {
+          restoreStoreWindowLetters(state, 0);
+          state.history = [];
+        }
+      });
+    },
+    backspace: () => {
+      set((state) => {
+        if (state.history.length > 0) {
+          state.input = state.input.slice(0, -1);
+          state.output = state.output.slice(0, -1);
+          restoreStoreWindowLetters(state, state.history.length - 1);
+          state.history.pop();
+        }
       });
     },
   })),
@@ -213,6 +254,9 @@ export const useEnigma = () => {
     update,
     type,
     wirings,
+    history,
+    backspace: storeBackspace,
+    clear: storeClear,
     ...state
   } = useEnigmaStore();
   const machineRef = useRef<Enigma | EnigmaM4>(new Enigma());
@@ -248,14 +292,7 @@ export const useEnigma = () => {
   const removePlugBoardWiring = useCallback<typeof storeAddPlugBoardWiring>(
     (wiring) => {
       if (uhrRef.current instanceof Uhr) {
-        const index =
-          wirings.findIndex(
-            (toRemove) =>
-              !(
-                (wiring[0] === toRemove[0] && wiring[1] === toRemove[1]) ||
-                (wiring[0] === toRemove[1] && wiring[1] === toRemove[0])
-              ),
-          ) + 1;
+        const index = wirings.findIndex(matchRemovabileWirings(wiring)) + 1;
         if (index > 0) {
           machineRef.current
             .getPlugBoard()
@@ -480,6 +517,53 @@ export const useEnigma = () => {
     [update, type],
   );
 
+  const restoreWindowLetters = useCallback(
+    (index: number) => {
+      if (history.length > 0 && index >= 0 && index < history.length) {
+        const toRestore = history[index];
+        if (type === "M4" && toRestore.fourth != null) {
+          machineRef.current.setRotorWindowLetter(
+            toRestore.fourth,
+            EnigmaM4.FOURTH_ROTOR,
+          );
+        }
+        if (toRestore.left != null) {
+          machineRef.current.setRotorWindowLetter(
+            toRestore.left,
+            Enigma.LEFT_ROTOR,
+          );
+        }
+        if (toRestore.center != null) {
+          machineRef.current.setRotorWindowLetter(
+            toRestore.center,
+            Enigma.CENTER_ROTOR,
+          );
+        }
+        if (toRestore.right != null) {
+          machineRef.current.setRotorWindowLetter(
+            toRestore.right,
+            Enigma.RIGHT_ROTOR,
+          );
+        }
+      }
+    },
+    [type, history],
+  );
+
+  const backspace = useCallback(() => {
+    if (history.length > 0) {
+      restoreWindowLetters(history.length - 1);
+      storeBackspace();
+    }
+  }, [history, restoreWindowLetters, storeBackspace]);
+
+  const clear = useCallback(() => {
+    if (history.length > 0) {
+      restoreWindowLetters(0);
+    }
+    storeClear();
+  }, [history, restoreWindowLetters, storeClear]);
+
   const isFourthRotorValid = Boolean(state.fourthRotor?.type);
   const isLeftRotorValid = Boolean(state.leftRotor?.type);
   const isCenterRotorValid = Boolean(state.centerRotor?.type);
@@ -501,6 +585,8 @@ export const useEnigma = () => {
     isCenterRotorValid &&
     isRightRotorValid &&
     isPlugBoardValid;
+
+  const isBackspaceEnabled = history.length > 0;
 
   const hookReturnValue = {
     ...state,
@@ -527,6 +613,9 @@ export const useEnigma = () => {
     setRotorRingPosition,
     setRotorWindowLetter,
     encode,
+    backspace,
+    isBackspaceEnabled,
+    clear,
   };
 
   useDebugValue(hookReturnValue);

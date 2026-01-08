@@ -7,6 +7,7 @@ import {
   useState,
   type ChangeEventHandler,
   type FC,
+  type KeyboardEventHandler,
   type MouseEventHandler,
 } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
@@ -15,8 +16,10 @@ const Keyboard: FC<KeyboardProps> = ({
   input,
   output,
   disabled,
+  backspaceEnabled: isBackspaceEnabled,
   onInput,
   onReset,
+  onBackspace,
 }) => {
   const inputId = useId();
   const groupById = useId();
@@ -28,7 +31,17 @@ const Keyboard: FC<KeyboardProps> = ({
   };
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (evt) => {
-    onInput(evt, normalizeInput(evt.target.value));
+    try {
+      onInput(evt, normalizeInput(evt.target.value));
+    } catch {
+      /* DO NOTHING */
+    }
+  };
+
+  const handleBackspace: KeyboardEventHandler<HTMLInputElement> = (evt) => {
+    if (isBackspaceEnabled && evt.key === "Backspace") {
+      onBackspace(evt);
+    }
   };
 
   const getGroupedLetters = (letters: string) => {
@@ -53,12 +66,13 @@ const Keyboard: FC<KeyboardProps> = ({
       <Row className="mb-3">
         <Col className="mb-3 mb-md-0" xs={12} md={4} lg={2}>
           <Form.Group controlId={inputId}>
+            <Form.Label visuallyHidden>Type in the text to encode</Form.Label>
             <div className={classNames({ "input-group": output.length })}>
-              <Form.Label visuallyHidden>Type in the text to encode</Form.Label>
               <Form.Control
                 type="text"
                 value=""
                 onChange={handleChangeInput}
+                onKeyUp={handleBackspace}
                 maxLength={1}
                 pattern="[A-Z]"
                 placeholder="Input"
@@ -94,6 +108,25 @@ const Keyboard: FC<KeyboardProps> = ({
             />
           </Form.Group>
         </Col>
+        {output.length > 0 && (
+          <Col
+            xs={12}
+            md={8}
+            lg={10}
+            className="mt-3 mt-md-0 d-flex align-items-md-center"
+          >
+            <div>
+              {isBackspaceEnabled ? (
+                <>
+                  Restore available by pressing <em>Backspace</em> or{" "}
+                  <em>Reset</em> button
+                </>
+              ) : (
+                <>Restore disabled</>
+              )}
+            </div>
+          </Col>
+        )}
       </Row>
     </div>
   );

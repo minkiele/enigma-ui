@@ -52,6 +52,8 @@ const Enigma: FC = () => {
     output,
     encode,
     clear,
+    backspace,
+    isBackspaceEnabled,
   } = useEnigma();
 
   const handleChangeType: TypeSelectorProps["onChangeType"] = (_, type) => {
@@ -316,9 +318,11 @@ const Enigma: FC = () => {
           <Keyboard
             input={input}
             output={output}
-            onInput={handleInput}
-            onReset={clear}
             disabled={!isMachineValid}
+            backspaceEnabled={isBackspaceEnabled}
+            onInput={handleInput}
+            onBackspace={backspace}
+            onReset={clear}
           />
         </Card.Body>
       </Card>

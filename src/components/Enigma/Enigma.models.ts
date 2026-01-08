@@ -35,6 +35,7 @@ export interface EnigmaState {
   uhrSetting?: number;
   input: string;
   output: string;
+  history: Array<EnigmaHistoryEntry>;
 }
 
 export type RotorIdentifier = "fourth" | "left" | "center" | "right";
@@ -46,6 +47,13 @@ export interface EnigmaUpdateData {
   left: Omit<RotorState<RotorType>, "type">;
   center: Omit<RotorState<RotorType>, "type">;
   right: Omit<RotorState<RotorType>, "type">;
+}
+
+export interface EnigmaHistoryEntry {
+  fourth?: string;
+  left?: string;
+  center?: string;
+  right?: string;
 }
 
 interface EnigmaActions {
@@ -69,6 +77,7 @@ interface EnigmaActions {
   removePlugBoardWiring: (wiring: PlugBoardWiring) => void;
   setUhrSetting: (setting: number | undefined) => void;
   update: (data: EnigmaUpdateData) => void;
+  backspace: () => void;
   clear: () => void;
 }
 
