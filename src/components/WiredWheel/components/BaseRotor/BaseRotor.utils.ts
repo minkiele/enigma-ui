@@ -7,3 +7,10 @@ export const ringPositions: Array<ReactNode> = Array.from({ length: 26 }).map(
     return createElement("option", { key: i.toString(), value: i }, label);
   },
 );
+
+export const windowLetters: Array<ReactNode> = Array.from({ length: 26 }).map(
+  (_, i) => {
+    const label = getLetter(i);
+    return createElement("option", { key: label, value: label }, label);
+  },
+);

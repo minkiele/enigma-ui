@@ -15,7 +15,7 @@ export interface BaseRotorProps<T extends RotorType | ThinRotorType> {
     ringPosition: NonNullable<BaseRotorProps<T>["ringPosition"]>,
   ) => void;
   onChangeWindowLetter: (
-    evt: ChangeEvent<HTMLInputElement>,
+    evt: ChangeEvent<HTMLSelectElement>,
     windowLetter: NonNullable<BaseRotorProps<T>["windowLetter"]>,
   ) => void;
 }
