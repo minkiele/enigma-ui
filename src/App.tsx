@@ -1,3 +1,5 @@
+import Readme from "../README.md";
+import { components } from "./App.utils";
 import { useTheme } from "./hooks/theme";
 import "./styles.scss";
 import { lazy, Suspense, type FC } from "react";
@@ -11,16 +13,7 @@ const App: FC = () => {
     <>
       <Container>
         <header>
-          <h1 className="display-1">EnigmaUI</h1>
-          <p className="lead">
-            It was 2016 when I wrote the first version of EnigmaUI. It was a
-            different React, a different decade, I had a different job. Over
-            time I integrated other features into my implementation of the{" "}
-            <em>Enigma machine</em>, like the <em>Reflector D</em> and the{" "}
-            <em>Uhr</em>. Providing a UI for them was starting to be a challenge
-            because I had to rewrite all the code into a modern language. But
-            then I did it.
-          </p>
+          <Readme components={components} />
         </header>
         <main>
           <Suspense fallback={<p>Loading Enigma...</p>}>
@@ -33,7 +26,8 @@ const App: FC = () => {
           Made near Venice with love ❤️ and some very badly misused free time
           during the '25s Christmas holidays. For other very badly misused free
           time you can visit{" "}
-          <a href="https://minkiele.github.io/">https://minkiele.github.io/</a>
+          <a href="https://minkiele.github.io/">https://minkiele.github.io/</a>.
+          Current version: {__APP_VERSION__}.
         </Container>
       </footer>
     </>
