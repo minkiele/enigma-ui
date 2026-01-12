@@ -1,3 +1,4 @@
+import { FormSelect } from "../FormControl/FormControl";
 import type { UhrProps } from "./Uhr.models";
 import { useId, type ChangeEventHandler, type FC } from "react";
 import { Col, Form, Row } from "react-bootstrap";
@@ -38,7 +39,7 @@ const Uhr: FC<UhrProps> = ({
         <Col xs={12} sm={8}>
           <Form.Group controlId={uhrSettingId}>
             <Form.Label>Setting</Form.Label>
-            <Form.Select
+            <FormSelect
               onChange={handleSetUhrSetting}
               value={uhrSetting ?? 0}
               disabled={uhrSetting == null}
@@ -48,7 +49,7 @@ const Uhr: FC<UhrProps> = ({
                   {setting}
                 </option>
               ))}
-            </Form.Select>
+            </FormSelect>
           </Form.Group>
         </Col>
       </Row>

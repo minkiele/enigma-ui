@@ -1,3 +1,4 @@
+import { Button, FormControl, InputGroup } from "../FormControl/FormControl";
 import type { KeyboardProps } from "./Keyboard.models";
 import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import {
@@ -10,7 +11,7 @@ import {
   type KeyboardEventHandler,
   type MouseEventHandler,
 } from "react";
-import { Button, Col, Form, InputGroup, ListGroup, Row } from "react-bootstrap";
+import { Col, Form, ListGroup, Row } from "react-bootstrap";
 
 const Keyboard: FC<KeyboardProps> = ({
   input,
@@ -84,7 +85,7 @@ const Keyboard: FC<KeyboardProps> = ({
           <Form.Group controlId={inputId}>
             <Form.Label visuallyHidden>Type in the text to encode</Form.Label>
             <InputGroup>
-              <Form.Control
+              <FormControl
                 type="text"
                 value=""
                 onChange={handleChangeInput}
@@ -120,8 +121,8 @@ const Keyboard: FC<KeyboardProps> = ({
         <Col xs={12} md={4} lg={2}>
           <Form.Group controlId={groupById}>
             <Form.Label>Group output by</Form.Label>
-            <InputGroup size="sm">
-              <Form.Control
+            <InputGroup>
+              <FormControl
                 type="number"
                 value={groupBy}
                 onChange={handleChangeGroupBy}

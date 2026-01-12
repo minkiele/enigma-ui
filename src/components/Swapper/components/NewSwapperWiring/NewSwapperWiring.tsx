@@ -1,4 +1,5 @@
 import type { Wiring } from "../../../Enigma/Enigma.models";
+import { Button, FormSelect } from "../../../FormControl/FormControl";
 import type { NewSwapperWiringProps } from "./NewSwapperWiring.models";
 import { getNewWiring } from "./NewSwapperWiring.utils";
 import { getLetter, normalizeInput } from "enigma-minkiele/enigma/lib/utils";
@@ -9,7 +10,7 @@ import {
   type ChangeEventHandler,
   type MouseEventHandler,
 } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 
 const NewSwapperWiring = <T extends Wiring>({
   onAddWiring,
@@ -72,19 +73,19 @@ const NewSwapperWiring = <T extends Wiring>({
       <Col xs={12} sm={5} className="mb-3 mb-sm-0">
         <Form.Group controlId={plug0Id}>
           <Form.Label visuallyHidden>First letter</Form.Label>
-          <Form.Select value={wiring[0]} onChange={handleUpdatePlug(0)}>
+          <FormSelect value={wiring[0]} onChange={handleUpdatePlug(0)}>
             <option value=""></option>
             {renderAlphabet([...forbidden, wiring[1]])}
-          </Form.Select>
+          </FormSelect>
         </Form.Group>
       </Col>
       <Col xs={12} sm={5} className="mb-3 mb-sm-0">
         <Form.Group controlId={plug1Id}>
           <Form.Label visuallyHidden>Second letter</Form.Label>
-          <Form.Select value={wiring[1]} onChange={handleUpdatePlug(1)}>
+          <FormSelect value={wiring[1]} onChange={handleUpdatePlug(1)}>
             <option value=""></option>
             {renderAlphabet([...forbidden, wiring[0]])}
-          </Form.Select>
+          </FormSelect>
         </Form.Group>
       </Col>
       <Col xs={12} sm={2} className="d-grid">

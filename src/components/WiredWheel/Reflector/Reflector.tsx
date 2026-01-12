@@ -1,3 +1,4 @@
+import { FormSelect } from "../../FormControl/FormControl";
 import type { ReflectorProps } from "./Reflector.models";
 import {
   reflectorTypes as fullSizeReflectorTypes,
@@ -28,14 +29,14 @@ const Reflector: FC<ReflectorProps> = ({
     <div>
       <Form.Group controlId={id}>
         <Form.Label>Type</Form.Label>
-        <Form.Select value={value ?? ""} onChange={handleChangeType}>
+        <FormSelect value={value ?? ""} onChange={handleChangeType}>
           {value == null && <option value="">Choose a reflector</option>}
           {options.map((reflector) => (
             <option key={reflector} value={reflector}>
               {reflector}
             </option>
           ))}
-        </Form.Select>
+        </FormSelect>
       </Form.Group>
       {value === "D" && (
         <Card className="mt-3">

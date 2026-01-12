@@ -1,7 +1,7 @@
 import type { Wiring } from "../../../Enigma/Enigma.models";
+import { Button } from "../../../FormControl/FormControl";
 import type { SwapperWiringProps } from "./SwapperWiring.models";
 import type { MouseEventHandler } from "react";
-import { Button } from "react-bootstrap";
 
 const SwapperWiring = <T extends Wiring>({
   wiring,

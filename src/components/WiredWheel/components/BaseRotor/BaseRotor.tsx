@@ -1,4 +1,5 @@
 import type { RotorType, ThinRotorType } from "../../../../models";
+import { FormSelect } from "../../../FormControl/FormControl";
 import type { BaseRotorProps } from "./BaseRotor.models";
 import { ringPositions, windowLetters } from "./BaseRotor.utils";
 import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
@@ -40,34 +41,34 @@ const BaseRotor = <T extends RotorType | ThinRotorType>({
     <div>
       <Form.Group className="mb-3" controlId={rotorTypeId}>
         <Form.Label>Type</Form.Label>
-        <Form.Select value={value ?? ""} onChange={handleChangeRotorType}>
+        <FormSelect value={value ?? ""} onChange={handleChangeRotorType}>
           {value == null && <option value="">Choose a rotor</option>}
           {options.map(({ value, label, disabled }) => (
             <option key={value} value={value} disabled={disabled}>
               {label}
             </option>
           ))}
-        </Form.Select>
+        </FormSelect>
       </Form.Group>
       <Form.Group className="mb-3" controlId={ringPositionId}>
         <Form.Label>Ring Position</Form.Label>
-        <Form.Select
+        <FormSelect
           value={ringPosition}
           onChange={handleChangeRingPosition}
           disabled={value == null}
         >
           {ringPositions}
-        </Form.Select>
+        </FormSelect>
       </Form.Group>
       <Form.Group controlId={windowLetterId}>
         <Form.Label>Window Position</Form.Label>
-        <Form.Select
+        <FormSelect
           value={windowLetter}
           disabled={value == null}
           onChange={handleChangeWindowLetter}
         >
           {windowLetters}
-        </Form.Select>
+        </FormSelect>
       </Form.Group>
     </div>
   );

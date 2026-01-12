@@ -1,4 +1,5 @@
 import type { EnigmaType } from "../../models";
+import { FormSelect } from "../FormControl/FormControl";
 import type { TypeSelectorProps } from "./TypeSelector.models";
 import { useId, type ChangeEventHandler, type FC } from "react";
 import { Form } from "react-bootstrap";
@@ -11,10 +12,10 @@ const TypeSelector: FC<TypeSelectorProps> = ({ type, onChangeType }) => {
   return (
     <Form.Group controlId={id}>
       <Form.Label>Type</Form.Label>
-      <Form.Select value={type} onChange={handleChange}>
+      <FormSelect value={type} onChange={handleChange}>
         <option value="M3">Enigma M3</option>
         <option value="M4">Enigma M4</option>
-      </Form.Select>
+      </FormSelect>
     </Form.Group>
   );
 };
