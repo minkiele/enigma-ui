@@ -1,4 +1,7 @@
 import type { RotorType, ThinRotorType } from "../../models";
+import Interop from "../../notes/Interop.md";
+import ReflectorDSetup from "../../notes/Reflector_D_Setup.md";
+import UhrSetup from "../../notes/Uhr_Setup.md";
 import Keyboard from "../Keyboard/Keyboard";
 import type { KeyboardProps } from "../Keyboard/Keyboard.models";
 import PlugBoard from "../PlugBoard/PlugBoard";
@@ -28,6 +31,7 @@ const Enigma: FC = () => {
     setReflectorType,
     addReflectorWiring,
     removeReflectorWiring,
+    isInteropReflector,
     fourthRotor,
     isFourthRotorValid,
     leftRotor,
@@ -175,13 +179,7 @@ const Enigma: FC = () => {
               onRemoveWiring={handleRemoveReflectorWiring}
             />
           </div>
-          {reflector?.type === "D" && (
-            <p>
-              For the Reflector D to work properly all the internal wirings must
-              be plugged in. They follow the principle of the Plugboard, but
-              they are placed inside the Reflector.
-            </p>
-          )}
+          {reflector?.type === "D" && <ReflectorDSetup />}
         </Card.Body>
       </Card>
       <Row className="mb-3">
@@ -271,6 +269,11 @@ const Enigma: FC = () => {
           </Card>
         </Col>
       </Row>
+      {isInteropReflector && (
+        <div className="mb-3">
+          <Interop />
+        </div>
+      )}
       <Card className="mb-3">
         <Card.Header className="bg-info-subtle">Uhr</Card.Header>
         <Card.Body>
@@ -300,16 +303,7 @@ const Enigma: FC = () => {
               lifo={uhrSetting != null}
             />
           </div>
-          {uhrSetting != null && (
-            <p>
-              For the Uhr to work properly you must{" "}
-              <em>plug in all the cables</em>. In order. Left side letter
-              represents the <em>red</em> connector, right side letter
-              represents the <em>black</em> connector. The numbering follows the
-              red side. That's why you can remove only the last couple (I'm lazy
-              and I didn't want to track all the empty numbers).
-            </p>
-          )}
+          {uhrSetting != null && <UhrSetup />}
         </Card.Body>
       </Card>
       <Card>

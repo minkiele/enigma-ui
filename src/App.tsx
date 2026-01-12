@@ -1,9 +1,10 @@
 import Readme from "../README.md";
 import { components } from "./App.utils";
 import { useTheme } from "./hooks/theme";
+import Footer from "./notes/Footer.md";
 import "./styles.scss";
 import { lazy, Suspense, type FC } from "react";
-import { Container } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 
 const Enigma = lazy(() => import("./components/Enigma/Enigma"));
 
@@ -23,11 +24,14 @@ const App: FC = () => {
       </Container>
       <footer className="mt-5 py-3 bg-body-secondary">
         <Container>
-          Made near Venice with love ❤️ and some very badly misused free time
-          during the '25s Christmas holidays. For other very badly misused free
-          time you can visit{" "}
-          <a href="https://minkiele.github.io/">https://minkiele.github.io/</a>.
-          Current version: {__APP_VERSION__}.
+          <Row>
+            <Col xs={12} md={9} lg={10}>
+              <Footer components={{ p: "div" }} />
+            </Col>
+            <Col xs={12} md={3} lg={2} className="text-md-end">
+              Current version: {__APP_VERSION__}
+            </Col>
+          </Row>
         </Container>
       </footer>
     </>

@@ -586,6 +586,15 @@ export const useEnigma = () => {
     isRightRotorValid &&
     isPlugBoardValid;
 
+  const isInteropReflector =
+    type === "M4" &&
+    state.fourthRotor?.windowLetter === "A" &&
+    state.fourthRotor.ringPosition === 0 &&
+    ((state.reflector?.type === "Thin B" &&
+      state.fourthRotor.type === "Beta") ||
+      (state.reflector?.type === "Thin C" &&
+        state.fourthRotor.type === "Gamma"));
+
   const isBackspaceEnabled = history.length > 0;
 
   const hookReturnValue = {
@@ -604,6 +613,7 @@ export const useEnigma = () => {
     setReflectorType,
     addReflectorWiring,
     removeReflectorWiring,
+    isInteropReflector,
     isFourthRotorValid,
     isLeftRotorValid,
     isCenterRotorValid,
