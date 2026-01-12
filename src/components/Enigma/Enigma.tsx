@@ -4,6 +4,10 @@ import ReflectorDSetup from "../../notes/Reflector_D_Setup.md";
 import UhrSetup from "../../notes/Uhr_Setup.md";
 import Keyboard from "../Keyboard/Keyboard";
 import type { KeyboardProps } from "../Keyboard/Keyboard.models";
+import {
+  DEFAULT_GROUP_BY_M3,
+  DEFAULT_GROUP_BY_M4,
+} from "../Keyboard/Keyboard.utils";
 import PlugBoard from "../PlugBoard/PlugBoard";
 import type { PlugBoardProps } from "../PlugBoard/PlugBoard.models";
 import TypeSelector from "../TypeSelector/TypeSelector";
@@ -312,6 +316,7 @@ const Enigma: FC = () => {
           <Keyboard
             input={input}
             output={output}
+            groupBy={type === "M3" ? DEFAULT_GROUP_BY_M3 : DEFAULT_GROUP_BY_M4}
             disabled={!isMachineValid}
             backspaceEnabled={isBackspaceEnabled}
             onInput={handleInput}

@@ -1,22 +1,23 @@
 import type { KeyboardProps } from "./Keyboard.models";
-import { DEFAULT_GROUP_BY } from "./Keyboard.utils";
-import classNames from "classnames";
 import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import {
+  useEffect,
   useId,
+  useRef,
   useState,
   type ChangeEventHandler,
   type FC,
   type KeyboardEventHandler,
   type MouseEventHandler,
 } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, InputGroup, ListGroup, Row } from "react-bootstrap";
 
 const Keyboard: FC<KeyboardProps> = ({
   input,
   output,
   disabled,
   backspaceEnabled: isBackspaceEnabled,
+  groupBy: propGroupBy,
   onInput,
   onReset,
   onBackspace,
@@ -24,10 +25,18 @@ const Keyboard: FC<KeyboardProps> = ({
   const inputId = useId();
   const groupById = useId();
 
-  const [groupBy, setGroupBy] = useState(DEFAULT_GROUP_BY);
+  const [groupBy, setGroupBy] = useState(propGroupBy);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    setGroupBy(propGroupBy);
+  }, [propGroupBy]);
+
   const resetState: MouseEventHandler<HTMLButtonElement> = (evt) => {
-    setGroupBy(DEFAULT_GROUP_BY);
+    setGroupBy(propGroupBy);
     onReset?.(evt);
+    inputRef.current?.focus();
   };
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (evt) => {
@@ -61,13 +70,20 @@ const Keyboard: FC<KeyboardProps> = ({
     }
   };
 
+  const incGroupBy: MouseEventHandler<HTMLButtonElement> = () => {
+    setGroupBy((prev) => prev + 1);
+  };
+  const decGroupBy: MouseEventHandler<HTMLButtonElement> = () => {
+    setGroupBy((prev) => Math.max(prev - 1, 0));
+  };
+
   return (
     <div>
       <Row className="mb-3">
         <Col className="mb-3 mb-md-0" xs={12} md={4} lg={2}>
           <Form.Group controlId={inputId}>
             <Form.Label visuallyHidden>Type in the text to encode</Form.Label>
-            <div className={classNames({ "input-group": output.length })}>
+            <InputGroup>
               <Form.Control
                 type="text"
                 value=""
@@ -77,15 +93,18 @@ const Keyboard: FC<KeyboardProps> = ({
                 pattern="[A-Z]"
                 placeholder="Input"
                 disabled={disabled}
+                ref={inputRef}
               />
-              <Button
-                variant="danger"
-                className={output.length ? "input-group-btn" : "d-none"}
-                onClick={resetState}
-              >
-                Reset
-              </Button>
-            </div>
+              {output.length > 0 && (
+                <Button
+                  variant="danger"
+                  className="input-group-btn"
+                  onClick={resetState}
+                >
+                  Reset
+                </Button>
+              )}
+            </InputGroup>
           </Form.Group>
         </Col>
         <Col className="mb-3 mb-md-0" xs={12} md={4} lg={5}>
@@ -101,11 +120,34 @@ const Keyboard: FC<KeyboardProps> = ({
         <Col xs={12} md={4} lg={2}>
           <Form.Group controlId={groupById}>
             <Form.Label>Group output by</Form.Label>
-            <Form.Control
-              type="number"
-              value={groupBy}
-              onChange={handleChangeGroupBy}
-            />
+            <InputGroup size="sm">
+              <Form.Control
+                type="number"
+                value={groupBy}
+                onChange={handleChangeGroupBy}
+              />
+              <Button
+                className="input-group-btn"
+                onClick={decGroupBy}
+                disabled={groupBy <= 0}
+                aria-label={
+                  groupBy === 0
+                    ? undefined
+                    : groupBy === 1
+                      ? "Ungroup output"
+                      : `Group output by ${groupBy - 1}`
+                }
+              >
+                -
+              </Button>
+              <Button
+                className="input-group-btn"
+                onClick={incGroupBy}
+                aria-label={`Group output by ${groupBy + 1}`}
+              >
+                +
+              </Button>
+            </InputGroup>
           </Form.Group>
         </Col>
         {output.length > 0 && (
@@ -113,18 +155,19 @@ const Keyboard: FC<KeyboardProps> = ({
             xs={12}
             md={8}
             lg={10}
-            className="mt-3 mt-md-0 d-flex align-items-md-center"
+            className="mt-3 mt-md-0 d-flex align-items-md-end"
           >
-            <div>
+            <ListGroup>
               {isBackspaceEnabled ? (
-                <>
+                <ListGroup.Item>
                   Restore available by pressing <em>Backspace</em> or{" "}
-                  <em>Reset</em> button
-                </>
+                  <em>Reset</em> button. It works even on mobile phones!
+                </ListGroup.Item>
               ) : (
-                <>Restore disabled</>
+                <ListGroup.Item>Restore disabled</ListGroup.Item>
               )}
-            </div>
+            </ListGroup>
+            <div></div>
           </Col>
         )}
       </Row>
