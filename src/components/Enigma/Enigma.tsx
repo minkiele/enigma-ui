@@ -157,7 +157,7 @@ const Enigma: FC = () => {
   };
 
   return (
-    <div>
+    <>
       <Card className="mb-3">
         <Card.Header className="bg-info-subtle">Machine type</Card.Header>
         <Card.Body>
@@ -325,10 +325,8 @@ const Enigma: FC = () => {
           />
         </Card.Body>
       </Card>
-    </div>
+    </>
   );
-
-  return null;
 };
 
 export default Enigma;

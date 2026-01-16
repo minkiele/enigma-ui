@@ -25,7 +25,7 @@ const Reflector: FC<ReflectorProps> = ({
     onChangeType(evt, evt.target.value as NonNullable<typeof value>);
   };
   return (
-    <div>
+    <>
       <Form.Group controlId={id}>
         <Form.Label>Type</Form.Label>
         <Form.Select value={value ?? ""} onChange={handleChangeType}>
@@ -49,7 +49,7 @@ const Reflector: FC<ReflectorProps> = ({
           </Card.Body>
         </Card>
       )}
-    </div>
+    </>
   );
 };
 

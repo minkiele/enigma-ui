@@ -8,21 +8,27 @@ import { Col, Container, Row } from "react-bootstrap";
 
 const Enigma = lazy(() => import("./components/Enigma/Enigma"));
 
+const Fallback: FC = () => (
+  <p>
+    <code>PIZLDEZ YVUUNBWZ</code>...
+  </p>
+);
+
 const App: FC = () => {
   useTheme();
   return (
     <>
-      <Container>
+      <Container className="my-5">
         <header>
           <Readme components={components} />
         </header>
         <main>
-          <Suspense fallback={<p>Loading Enigma...</p>}>
+          <Suspense fallback={<Fallback />}>
             <Enigma />
           </Suspense>
         </main>
       </Container>
-      <footer className="mt-5 py-3 bg-body-secondary">
+      <footer className="py-3 bg-body-secondary">
         <Container>
           <Row>
             <Col xs={12} md={9} lg={10}>

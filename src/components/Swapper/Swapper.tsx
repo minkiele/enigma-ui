@@ -12,7 +12,7 @@ const Swapper = <T extends Wiring>({
   forbidden,
   lifo,
 }: SwapperProps<T>) => (
-  <div>
+  <>
     {wirings.length > 0 && (
       <ListGroup className="mb-3">
         {wirings.map((wiring, index) => (
@@ -36,7 +36,7 @@ const Swapper = <T extends Wiring>({
         />
       </Card>
     )}
-  </div>
+  </>
 );
 
 export default Swapper;

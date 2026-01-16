@@ -37,7 +37,7 @@ const BaseRotor = <T extends RotorType | ThinRotorType>({
   };
 
   return (
-    <div>
+    <>
       <Form.Group className="mb-3" controlId={rotorTypeId}>
         <Form.Label>Type</Form.Label>
         <Form.Select value={value ?? ""} onChange={handleChangeRotorType}>
@@ -69,7 +69,7 @@ const BaseRotor = <T extends RotorType | ThinRotorType>({
           {windowLetters}
         </Form.Select>
       </Form.Group>
-    </div>
+    </>
   );
 };
 
