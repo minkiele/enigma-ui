@@ -8,6 +8,7 @@ import {
   DEFAULT_GROUP_BY_M3,
   DEFAULT_GROUP_BY_M4,
 } from "../Keyboard/Keyboard.utils";
+import LampBoard from "../LampBoard/LampBoard";
 import PlugBoard from "../PlugBoard/PlugBoard";
 import type { PlugBoardProps } from "../PlugBoard/PlugBoard.models";
 import TypeSelector from "../TypeSelector/TypeSelector";
@@ -323,6 +324,12 @@ const Enigma: FC = () => {
             onBackspace={backspace}
             onReset={clear}
           />
+        </Card.Body>
+      </Card>
+      <Card>
+        <Card.Header className="bg-info-subtle">Lampboard</Card.Header>
+        <Card.Body>
+          <LampBoard />
         </Card.Body>
       </Card>
     </>
