@@ -2,6 +2,7 @@ import type { RotorType, ThinRotorType } from "../../models";
 import Interop from "../../notes/Interop.md";
 import ReflectorDSetup from "../../notes/Reflector_D_Setup.md";
 import UhrSetup from "../../notes/Uhr_Setup.md";
+import Export from "../Export/Export";
 import Keyboard from "../Keyboard/Keyboard";
 import type { KeyboardProps } from "../Keyboard/Keyboard.models";
 import {
@@ -310,7 +311,7 @@ const Enigma: FC = () => {
           {uhrSetting != null && <UhrSetup />}
         </Card.Body>
       </Card>
-      <Card>
+      <Card className="mb-3">
         <Card.Header className="bg-info-subtle">Keyboard</Card.Header>
         <Card.Body>
           <Keyboard
@@ -322,6 +323,22 @@ const Enigma: FC = () => {
             onInput={handleInput}
             onBackspace={backspace}
             onReset={clear}
+          />
+        </Card.Body>
+      </Card>
+      <Card>
+        <Card.Header className="bg-info-subtle">Export</Card.Header>
+        <Card.Body>
+          <Export
+            type={type}
+            wirings={wirings}
+            centerRotor={centerRotor}
+            fourthRotor={fourthRotor}
+            leftRotor={leftRotor}
+            reflector={reflector}
+            rightRotor={rightRotor}
+            uhrSetting={uhrSetting}
+            isMachineValid={isMachineValid}
           />
         </Card.Body>
       </Card>
