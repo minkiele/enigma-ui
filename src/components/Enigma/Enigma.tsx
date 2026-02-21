@@ -2,7 +2,8 @@ import type { RotorType, ThinRotorType } from "../../models";
 import Interop from "../../notes/Interop.md";
 import ReflectorDSetup from "../../notes/Reflector_D_Setup.md";
 import UhrSetup from "../../notes/Uhr_Setup.md";
-import Export from "../Export/Export";
+import ImportExport from "../ImportExport/ImportExport";
+import type { ImportExportProps } from "../ImportExport/ImportExport.models";
 import Keyboard from "../Keyboard/Keyboard";
 import type { KeyboardProps } from "../Keyboard/Keyboard.models";
 import {
@@ -155,6 +156,10 @@ const Enigma: FC = () => {
 
   const handleInput: KeyboardProps["onInput"] = (_, input) => {
     encode(input);
+  };
+
+  const handleImport: ImportExportProps['onImport'] = (_, imported) => {
+    console.log(imported);
   };
 
   return (
@@ -327,9 +332,9 @@ const Enigma: FC = () => {
         </Card.Body>
       </Card>
       <Card>
-        <Card.Header className="bg-info-subtle">Export</Card.Header>
+        <Card.Header className="bg-info-subtle">Import / Export</Card.Header>
         <Card.Body>
-          <Export
+          <ImportExport
             type={type}
             wirings={wirings}
             centerRotor={centerRotor}
@@ -339,6 +344,7 @@ const Enigma: FC = () => {
             rightRotor={rightRotor}
             uhrSetting={uhrSetting}
             isMachineValid={isMachineValid}
+            onImport={handleImport}
           />
         </Card.Body>
       </Card>
