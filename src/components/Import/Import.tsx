@@ -18,7 +18,7 @@ const Import: FC<ImportProps> = ({ onImport }) => {
   const handleProvideImport: ChangeEventHandler<HTMLInputElement> = async (
     evt,
   ) => {
-    const { validateImportSchema } = await import("../../utils/validate");
+    const { validateImportSchema } = await import("./Import.utils");
     try {
       const input = await evt.target.files?.[0].text();
       if (input) {

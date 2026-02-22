@@ -36,7 +36,7 @@ import {
 } from "enigma-minkiele";
 import Reflector from "enigma-minkiele/enigma/Component/WiredWheel/Reflector/Reflector";
 import type Rotor from "enigma-minkiele/enigma/Component/WiredWheel/Rotor/Rotor";
-import { useCallback, useDebugValue, useRef } from "react";
+import { useCallback, useDebugValue, useEffect, useRef, useState } from "react";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -737,4 +737,18 @@ export const useEnigma = () => {
   useDebugValue(hookReturnValue);
 
   return hookReturnValue;
+};
+
+export const useImportScroll = () => {
+  const [lastImport, setLastImport] = useState<Date>();
+  const keyboardRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (lastImport != null) {
+      keyboardRef.current?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  }, [lastImport]);
+  const triggerScroll = useCallback(() => setLastImport(new Date()), []);
+  return { triggerScroll, keyboardRef };
 };

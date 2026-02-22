@@ -23,9 +23,9 @@ import Rotor from "../WiredWheel/Rotor/Rotor";
 import ThinRotor from "../WiredWheel/ThinRotor/ThinRotor";
 import type { BaseRotorProps } from "../WiredWheel/components/BaseRotor/BaseRotor.models";
 import type { RotorIdentifier } from "./Enigma.models";
-import { useEnigma } from "./Enigma.utils";
+import { useEnigma, useImportScroll } from "./Enigma.utils";
 import classNames from "classnames";
-import type { FC } from "react";
+import { type FC } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 
 const Enigma: FC = () => {
@@ -160,9 +160,11 @@ const Enigma: FC = () => {
     encode(input);
   };
 
+  const { triggerScroll, keyboardRef } = useImportScroll();
+
   const handleImport: ImportProps["onImport"] = (_, imported) => {
     importSettings(imported);
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    triggerScroll();
   };
 
   return (
@@ -319,7 +321,7 @@ const Enigma: FC = () => {
           {uhrSetting != null && <UhrSetup />}
         </Card.Body>
       </Card>
-      <Card className="mb-3">
+      <Card className="mb-3" ref={keyboardRef}>
         <Card.Header className="bg-info-subtle">Keyboard</Card.Header>
         <Card.Body>
           <Keyboard
