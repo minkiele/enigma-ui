@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import {
   createElement,
+  Fragment,
   type FC,
   type HTMLAttributes,
   type HTMLElementType,
@@ -27,4 +28,15 @@ const ReadmeP: FC<HTMLAttributes<HTMLParagraphElement>> = ({
 export const components: Partial<Record<HTMLElementType, FC>> = {
   h1: ReadmeH1,
   p: ReadmeP,
+};
+
+const UnwrapP: FC<HTMLAttributes<HTMLParagraphElement>> = ({
+  ...props
+}) =>
+  createElement(Fragment, {
+    ...props,
+  });
+
+export const unwrapp: Partial<Record<HTMLElementType, FC>> = {
+  p: UnwrapP,
 };

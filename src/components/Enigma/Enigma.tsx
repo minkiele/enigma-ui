@@ -2,8 +2,9 @@ import type { RotorType, ThinRotorType } from "../../models";
 import Interop from "../../notes/Interop.md";
 import ReflectorDSetup from "../../notes/Reflector_D_Setup.md";
 import UhrSetup from "../../notes/Uhr_Setup.md";
-import ImportExport from "../ImportExport/ImportExport";
-import type { ImportExportProps } from "../ImportExport/ImportExport.models";
+import Export from "../Export/Export";
+import Import from "../Import/Import";
+import type { ImportProps } from "../Import/Import.models";
 import Keyboard from "../Keyboard/Keyboard";
 import type { KeyboardProps } from "../Keyboard/Keyboard.models";
 import {
@@ -64,6 +65,7 @@ const Enigma: FC = () => {
     clear,
     backspace,
     isBackspaceEnabled,
+    importSettings,
   } = useEnigma();
 
   const handleChangeType: TypeSelectorProps["onChangeType"] = (_, type) => {
@@ -158,8 +160,9 @@ const Enigma: FC = () => {
     encode(input);
   };
 
-  const handleImport: ImportExportProps['onImport'] = (_, imported) => {
-    console.log(imported);
+  const handleImport: ImportProps["onImport"] = (_, imported) => {
+    importSettings(imported);
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   };
 
   return (
@@ -331,23 +334,34 @@ const Enigma: FC = () => {
           />
         </Card.Body>
       </Card>
-      <Card>
-        <Card.Header className="bg-info-subtle">Import / Export</Card.Header>
-        <Card.Body>
-          <ImportExport
-            type={type}
-            wirings={wirings}
-            centerRotor={centerRotor}
-            fourthRotor={fourthRotor}
-            leftRotor={leftRotor}
-            reflector={reflector}
-            rightRotor={rightRotor}
-            uhrSetting={uhrSetting}
-            isMachineValid={isMachineValid}
-            onImport={handleImport}
-          />
-        </Card.Body>
-      </Card>
+      <Row>
+        <Col md={6} className="mb-3 mb-md-0">
+          <Card className="h-100">
+            <Card.Header className="bg-info-subtle">Export</Card.Header>
+            <Card.Body>
+              <Export
+                type={type}
+                wirings={wirings}
+                centerRotor={centerRotor}
+                fourthRotor={fourthRotor}
+                leftRotor={leftRotor}
+                reflector={reflector}
+                rightRotor={rightRotor}
+                uhrSetting={uhrSetting}
+                isMachineValid={isMachineValid}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={6}>
+          <Card>
+            <Card.Header className="bg-info-subtle">Import</Card.Header>
+            <Card.Body>
+              <Import onImport={handleImport} />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </>
   );
 };

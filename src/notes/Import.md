@@ -1,0 +1,1 @@
+Import settings from a json file. Load a file and then click on _Import_.

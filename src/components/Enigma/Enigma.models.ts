@@ -79,6 +79,12 @@ interface EnigmaActions {
   update: (data: EnigmaUpdateData) => void;
   backspace: () => void;
   clear: () => void;
+  importSettings: (settings: ExchangeSettings) => void;
 }
 
 export type EnigmaStore = EnigmaState & EnigmaActions;
+
+export type ExchangeSettings = Omit<
+  EnigmaState,
+  "history" | "input" | "output"
+>;

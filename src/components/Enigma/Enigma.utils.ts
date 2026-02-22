@@ -8,6 +8,7 @@ import type {
   EnigmaState,
   EnigmaStore,
   RotorIdentifier,
+  RotorState,
   Wiring,
 } from "./Enigma.models";
 import {
@@ -236,6 +237,12 @@ const useEnigmaStore = create<EnigmaStore>()(
         }
       });
     },
+    importSettings: (settings) => {
+      set(() => ({
+        ...initialState,
+        ...settings,
+      }));
+    },
   })),
 );
 
@@ -257,36 +264,44 @@ export const useEnigma = () => {
     history,
     backspace: storeBackspace,
     clear: storeClear,
+    importSettings: storeImportSettings,
     ...state
   } = useEnigmaStore();
   const machineRef = useRef<Enigma | EnigmaM4>(new Enigma());
   const uhrRef = useRef<Uhr | undefined>(undefined);
+
+  const refSetMachineType = useCallback<typeof storeSetMachineType>((type) => {
+    uhrRef.current = undefined;
+    if (type === "M3") {
+      machineRef.current = new Enigma();
+    } else {
+      machineRef.current = new EnigmaM4();
+    }
+  }, []);
   const setMachineType = useCallback<typeof storeSetMachineType>(
     (type) => {
-      uhrRef.current = undefined;
-      if (type === "M3") {
-        machineRef.current = new Enigma();
-      } else {
-        machineRef.current = new EnigmaM4();
-      }
+      refSetMachineType(type);
       storeSetMachineType(type);
     },
-    [storeSetMachineType],
+    [refSetMachineType, storeSetMachineType],
   );
+
+  const refAddPlugBoardWiring = useCallback((index: number, wiring: Wiring) => {
+    if (uhrRef.current instanceof Uhr) {
+      machineRef.current
+        .getPlugBoard()
+        .plugWire(uhrRef.current.prepareUhrWire(index, ...wiring));
+    } else {
+      machineRef.current.getPlugBoard().plugWire(...wiring);
+    }
+  }, []);
+
   const addPlugBoardWiring = useCallback<typeof storeAddPlugBoardWiring>(
     (wiring) => {
-      if (uhrRef.current instanceof Uhr) {
-        machineRef.current
-          .getPlugBoard()
-          .plugWire(
-            uhrRef.current.prepareUhrWire(wirings.length + 1, ...wiring),
-          );
-      } else {
-        machineRef.current.getPlugBoard().plugWire(...wiring);
-      }
+      refAddPlugBoardWiring(wirings.length + 1, wiring);
       storeAddPlugBoardWiring(wiring);
     },
-    [wirings, storeAddPlugBoardWiring],
+    [wirings, refAddPlugBoardWiring, storeAddPlugBoardWiring],
   );
 
   const removePlugBoardWiring = useCallback<typeof storeAddPlugBoardWiring>(
@@ -306,13 +321,17 @@ export const useEnigma = () => {
     [wirings, storeRemovePlugBoardWiring],
   );
 
-  const plugUhr = useCallback(() => {
+  const refPlugUhr = useCallback((wirings: Array<Wiring>) => {
     uhrRef.current = new Uhr();
     uhrRef.current.prepareUhrWires(wirings);
     machineRef.current.getPlugBoard().unplugAllWires();
     machineRef.current.getPlugBoard().plugWires(uhrRef.current.getUhrWires());
+  }, []);
+
+  const plugUhr = useCallback(() => {
+    refPlugUhr(wirings);
     storeSetUhrSetting(0);
-  }, [wirings, storeSetUhrSetting]);
+  }, [wirings, refPlugUhr, storeSetUhrSetting]);
 
   const unplugUhr = useCallback(() => {
     machineRef.current.getPlugBoard().unplugAllWires();
@@ -321,19 +340,26 @@ export const useEnigma = () => {
     storeSetUhrSetting(undefined);
   }, [wirings, storeSetUhrSetting]);
 
+  const refSetUhrSetting = useCallback((uhrSetting: number) => {
+    if (uhrRef.current instanceof Uhr) {
+      uhrRef.current.setUhrSetting(uhrSetting);
+      return true;
+    }
+    return false;
+  }, []);
+
   const setUhrSetting = useCallback(
     (uhrSetting: number) => {
-      if (uhrRef.current instanceof Uhr) {
-        uhrRef.current.setUhrSetting(uhrSetting);
+      if (refSetUhrSetting(uhrSetting)) {
         storeSetUhrSetting(uhrSetting);
       }
     },
-    [storeSetUhrSetting],
+    [refSetUhrSetting, storeSetUhrSetting],
   );
 
   const isPlugBoardValid = state.uhrSetting == null || wirings.length === 10;
 
-  const setReflectorType = useCallback<typeof storeSetReflectorType>(
+  const refSetReflectorType = useCallback<typeof storeSetReflectorType>(
     (type) => {
       let reflector: Reflector;
       switch (type) {
@@ -376,20 +402,34 @@ export const useEnigma = () => {
       ) {
         machineRef.current.unsetRotor(EnigmaM4.FOURTH_ROTOR);
       }
+    },
+    [],
+  );
+
+  const setReflectorType = useCallback<typeof storeSetReflectorType>(
+    (type) => {
+      refSetReflectorType(type);
       storeSetReflectorType(type);
     },
-    [storeSetReflectorType],
+    [refSetReflectorType, storeSetReflectorType],
   );
+
+  const refAddReflectorWiring = useCallback((wiring: Wiring) => {
+    const reflector = machineRef.current.getReflector();
+    if (reflector instanceof ReflectorD) {
+      reflector.plugWireInAlliedNotation(...wiring);
+      return true;
+    }
+    return false;
+  }, []);
 
   const addReflectorWiring = useCallback<typeof storeAddReflectorWiring>(
     (wiring) => {
-      const reflector = machineRef.current.getReflector();
-      if (reflector instanceof ReflectorD) {
-        reflector.plugWireInAlliedNotation(...wiring);
+      if (refAddReflectorWiring(wiring)) {
         storeAddReflectorWiring(wiring);
       }
     },
-    [storeAddReflectorWiring],
+    [refAddReflectorWiring, storeAddReflectorWiring],
   );
 
   const removeReflectorWiring = useCallback<typeof storeRemoveReflectorWiring>(
@@ -403,7 +443,7 @@ export const useEnigma = () => {
     [storeRemoveReflectorWiring],
   );
 
-  const setRotorType = useCallback<typeof storeSetRotorType>(
+  const refSetRotorType = useCallback<typeof storeSetRotorType>(
     (rotor, type) => {
       let rotorInstance: Rotor;
       switch (type) {
@@ -450,29 +490,50 @@ export const useEnigma = () => {
       }
 
       machineRef.current.setRotor(rotorInstance, getRotorName(rotor));
+    },
+    [],
+  );
+  const setRotorType = useCallback<typeof storeSetRotorType>(
+    (rotor, type) => {
+      refSetRotorType(rotor, type);
       storeSetRotorType(rotor, type);
     },
-    [storeSetRotorType],
+    [refSetRotorType, storeSetRotorType],
   );
-  const setRotorRingPosition = useCallback<typeof storeSetRotorRingPosition>(
-    (rotor, ringPosition) => {
+  const refSetRotorRingPosition = useCallback(
+    (rotor: RotorIdentifier, ringPosition: number) => {
       const machineRotor = machineRef.current.getRotor(getRotorName(rotor));
       if (machineRotor != null) {
         machineRotor.setRingPosition(ringPosition);
+        return true;
+      }
+      return false;
+    },
+    [],
+  );
+  const setRotorRingPosition = useCallback<typeof storeSetRotorRingPosition>(
+    (rotor, ringPosition) => {
+      if (refSetRotorRingPosition(rotor, ringPosition)) {
         storeSetRotorRingPosition(rotor, ringPosition);
       }
     },
-    [storeSetRotorRingPosition],
+    [refSetRotorRingPosition, storeSetRotorRingPosition],
   );
-  const setRotorWindowLetter = useCallback<typeof storeSetRotorWindowLetter>(
+  const refSetRotorWindowLetter = useCallback<typeof storeSetRotorWindowLetter>(
     (rotor, windowLetter) => {
       machineRef.current.setRotorWindowLetter(
         windowLetter,
         getRotorName(rotor),
       );
+    },
+    [],
+  );
+  const setRotorWindowLetter = useCallback<typeof storeSetRotorWindowLetter>(
+    (rotor, windowLetter) => {
+      refSetRotorWindowLetter(rotor, windowLetter);
       storeSetRotorWindowLetter(rotor, windowLetter);
     },
-    [storeSetRotorWindowLetter],
+    [refSetRotorWindowLetter, storeSetRotorWindowLetter],
   );
   const encode = useCallback(
     (input: string) => {
@@ -564,6 +625,50 @@ export const useEnigma = () => {
     storeClear();
   }, [history, restoreWindowLetters, storeClear]);
 
+  const importSettings = useCallback<typeof storeImportSettings>(
+    (settings) => {
+      refSetMachineType(settings.type);
+      if (settings.reflector) {
+        refSetReflectorType(settings.reflector.type);
+        if (settings.reflector.type === "D") {
+          settings.reflector.wirings.forEach(refAddReflectorWiring);
+        }
+      }
+      const maybeSetupRotor = (
+        rotor: RotorIdentifier,
+        settings: RotorState<RotorType | ThinRotorType> | undefined,
+      ) => {
+        if (settings) {
+          refSetRotorType(rotor, settings.type);
+          refSetRotorRingPosition(rotor, settings.ringPosition);
+          refSetRotorWindowLetter(rotor, settings.windowLetter);
+        }
+      };
+      maybeSetupRotor("fourth", settings.fourthRotor);
+      maybeSetupRotor("left", settings.leftRotor);
+      maybeSetupRotor("center", settings.centerRotor);
+      maybeSetupRotor("right", settings.rightRotor);
+      if (settings.uhrSetting != null) {
+        refSetUhrSetting(settings.uhrSetting);
+      }
+      settings.wirings.forEach((wiring, index) =>
+        refAddPlugBoardWiring(index, wiring),
+      );
+      storeImportSettings(settings);
+    },
+    [
+      refSetMachineType,
+      refSetReflectorType,
+      refAddReflectorWiring,
+      refSetRotorType,
+      refSetRotorRingPosition,
+      refSetRotorWindowLetter,
+      refSetUhrSetting,
+      refAddPlugBoardWiring,
+      storeImportSettings,
+    ],
+  );
+
   const isFourthRotorValid = Boolean(state.fourthRotor?.type);
   const isLeftRotorValid = Boolean(state.leftRotor?.type);
   const isCenterRotorValid = Boolean(state.centerRotor?.type);
@@ -626,6 +731,7 @@ export const useEnigma = () => {
     backspace,
     isBackspaceEnabled,
     clear,
+    importSettings,
   };
 
   useDebugValue(hookReturnValue);
