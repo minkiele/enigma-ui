@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import {
   createElement,
-  Fragment,
   type FC,
   type HTMLAttributes,
   type HTMLElementType,
