@@ -36,7 +36,3 @@ const UnwrapP: FC<HTMLAttributes<HTMLParagraphElement>> = ({
   createElement(Fragment, {
     ...props,
   });
-
-export const unwrapp: Partial<Record<HTMLElementType, FC>> = {
-  p: UnwrapP,
-};
