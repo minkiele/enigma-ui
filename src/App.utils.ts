@@ -29,10 +29,3 @@ export const components: Partial<Record<HTMLElementType, FC>> = {
   h1: ReadmeH1,
   p: ReadmeP,
 };
-
-const UnwrapP: FC<HTMLAttributes<HTMLParagraphElement>> = ({
-  ...props
-}) =>
-  createElement(Fragment, {
-    ...props,
-  });
