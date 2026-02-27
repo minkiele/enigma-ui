@@ -127,6 +127,7 @@ const useEnigmaStore = create<EnigmaStore>()(
     addPlugBoardWiring: (wiring) => {
       set((state) => {
         state.wirings.push(wiring);
+        state.history = [];
       });
     },
     update: ({ input, output, fourth, left, center, right }) => {
@@ -156,21 +157,34 @@ const useEnigmaStore = create<EnigmaStore>()(
     removePlugBoardWiring: (wiring) => {
       set((state) => {
         state.wirings = state.wirings.filter(matchRemovabileWirings(wiring));
+        state.history = [];
       });
     },
     plugUhr: () => {
       set((state) => {
         state.uhrSetting = 0;
+        // Uhr connected on default setting 0 is transparent,
+        // so it is compatible with history and we don't need to clean it
       });
     },
     unplugUhr: () => {
       set((state) => {
-        state.uhrSetting = undefined;
+        if (state.uhrSetting != null) {
+          if (state.uhrSetting > 0) {
+            // While unplugging the Uhr history becomes incompatible only if
+            // It was set on a position different than 0
+            state.history = [];
+          }
+          state.uhrSetting = undefined;
+        }
       });
     },
     setUhrSetting: (setting) => {
       set((state) => {
-        state.uhrSetting = setting;
+        if (state.uhrSetting !== setting) {
+          state.uhrSetting = setting;
+          state.history = [];
+        }
       });
     },
     setMachineType: (type) => {
@@ -182,12 +196,14 @@ const useEnigmaStore = create<EnigmaStore>()(
         if (state.type === "M4" && !thinReflectors.includes(type)) {
           state.fourthRotor = undefined;
         }
+        state.history = [];
       });
     },
     addReflectorWiring: (wiring) => {
       set((state) => {
         if (state.reflector) {
           state.reflector.wirings.push(wiring);
+          state.history = [];
         }
       });
     },
@@ -197,6 +213,7 @@ const useEnigmaStore = create<EnigmaStore>()(
           state.reflector.wirings = state.reflector.wirings.filter(
             matchRemovabileWirings(wiring),
           );
+          state.history = [];
         }
       });
     },
@@ -205,6 +222,7 @@ const useEnigmaStore = create<EnigmaStore>()(
         const key: `${RotorIdentifier}Rotor` = `${rotor}Rotor`;
         if (state[key] != null) {
           state[key].ringPosition = ringPosition;
+          state.history = [];
         }
       });
     },
@@ -213,7 +231,9 @@ const useEnigmaStore = create<EnigmaStore>()(
         const key: `${RotorIdentifier}Rotor` = `${rotor}Rotor`;
         if (state[key] != null) {
           state[key].windowLetter = windowLetter;
-          state.history = [];
+          // Since it was common practice to encrypt the message key with
+          // the daily key a change in the current window letter should
+          // not influence the history hence does not need cleanup
         }
       });
     },
