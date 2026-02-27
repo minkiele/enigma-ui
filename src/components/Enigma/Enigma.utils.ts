@@ -127,7 +127,6 @@ const useEnigmaStore = create<EnigmaStore>()(
     addPlugBoardWiring: (wiring) => {
       set((state) => {
         state.wirings.push(wiring);
-        state.history = [];
       });
     },
     update: ({ input, output, fourth, left, center, right }) => {
@@ -157,33 +156,12 @@ const useEnigmaStore = create<EnigmaStore>()(
     removePlugBoardWiring: (wiring) => {
       set((state) => {
         state.wirings = state.wirings.filter(matchRemovabileWirings(wiring));
-        state.history = [];
-      });
-    },
-    plugUhr: () => {
-      set((state) => {
-        state.uhrSetting = 0;
-        // Uhr connected on default setting 0 is transparent,
-        // so it is compatible with history and we don't need to clean it
-      });
-    },
-    unplugUhr: () => {
-      set((state) => {
-        if (state.uhrSetting != null) {
-          if (state.uhrSetting > 0) {
-            // While unplugging the Uhr history becomes incompatible only if
-            // It was set on a position different than 0
-            state.history = [];
-          }
-          state.uhrSetting = undefined;
-        }
       });
     },
     setUhrSetting: (setting) => {
       set((state) => {
         if (state.uhrSetting !== setting) {
           state.uhrSetting = setting;
-          state.history = [];
         }
       });
     },
