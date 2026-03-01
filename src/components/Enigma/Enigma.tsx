@@ -2,6 +2,7 @@ import type { RotorType, ThinRotorType } from "../../models";
 import Interop from "../../notes/Interop.md";
 import ReflectorDSetup from "../../notes/Reflector_D_Setup.md";
 import UhrSetup from "../../notes/Uhr_Setup.md";
+import { useScrollIntoView } from "../../utils/utils";
 import Export from "../Export/Export";
 import Import from "../Import/Import";
 import type { ImportProps } from "../Import/Import.models";
@@ -23,7 +24,7 @@ import Rotor from "../WiredWheel/Rotor/Rotor";
 import ThinRotor from "../WiredWheel/ThinRotor/ThinRotor";
 import type { BaseRotorProps } from "../WiredWheel/components/BaseRotor/BaseRotor.models";
 import type { RotorIdentifier } from "./Enigma.models";
-import { useEnigma, useImportScroll } from "./Enigma.utils";
+import { useEnigma } from "./Enigma.utils";
 import classNames from "classnames";
 import { type FC } from "react";
 import { Card, Col, Row } from "react-bootstrap";
@@ -160,11 +161,11 @@ const Enigma: FC = () => {
     encode(input);
   };
 
-  const { triggerScroll, keyboardRef } = useImportScroll();
+  const { scrollIntoView, ref } = useScrollIntoView<HTMLDivElement>();
 
   const handleImport: ImportProps["onImport"] = (_, imported) => {
     importSettings(imported);
-    triggerScroll();
+    scrollIntoView();
   };
 
   return (
@@ -321,7 +322,7 @@ const Enigma: FC = () => {
           {uhrSetting != null && <UhrSetup />}
         </Card.Body>
       </Card>
-      <Card className="mb-3" ref={keyboardRef}>
+      <Card className="mb-3" ref={ref}>
         <Card.Header className="bg-info-subtle">Keyboard</Card.Header>
         <Card.Body>
           <Keyboard
