@@ -1,4 +1,5 @@
 import type { Wiring } from "../../../Enigma/Enigma.models";
+import SwapperLabel from "../SwapperLabel/SwapperLabel";
 import type { SwapperWiringProps } from "./SwapperWiring.models";
 import type { MouseEventHandler } from "react";
 import { Button } from "react-bootstrap";
@@ -6,6 +7,7 @@ import { Button } from "react-bootstrap";
 const SwapperWiring = <T extends Wiring>({
   wiring,
   disabled,
+  children,
   onRemoveWiring,
 }: SwapperWiringProps<T>) => {
   const handleRemoveWiring: MouseEventHandler<HTMLButtonElement> = (evt) => {
@@ -13,10 +15,7 @@ const SwapperWiring = <T extends Wiring>({
   };
   return (
     <div className="d-flex align-items-center">
-      <strong aria-label={`${wiring[0]} swaps with ${wiring[1]}`}>
-        {" "}
-        {wiring[0]} &hArr; {wiring[1]}{" "}
-      </strong>
+      {children || <SwapperLabel wiring={wiring} />}
       <div className="ms-auto">
         <Button
           variant="danger"

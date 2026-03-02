@@ -14,6 +14,9 @@ import {
 } from "../Keyboard/Keyboard.utils";
 import PlugBoard from "../PlugBoard/PlugBoard";
 import type { PlugBoardProps } from "../PlugBoard/PlugBoard.models";
+import SwapperLabel, {
+  UhrSwapperLabel,
+} from "../Swapper/components/SwapperLabel/SwapperLabel";
 import TypeSelector from "../TypeSelector/TypeSelector";
 import type { TypeSelectorProps } from "../TypeSelector/TypeSelector.models";
 import Uhr from "../Uhr/Uhr";
@@ -317,7 +320,15 @@ const Enigma: FC = () => {
               onAddWiring={handleAddPlugBoardWiring}
               onRemoveWiring={handleRemovePlugBoardWiring}
               lifo={uhrSetting != null}
-            />
+            >
+              {(wiring, index) =>
+                uhrSetting == null ? (
+                  <SwapperLabel wiring={wiring} />
+                ) : (
+                  <UhrSwapperLabel wiring={wiring} index={index} />
+                )
+              }
+            </PlugBoard>
           </div>
           {uhrSetting != null && <UhrSetup />}
         </Card.Body>

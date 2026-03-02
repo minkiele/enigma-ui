@@ -1,5 +1,5 @@
 import type { Wiring } from "../Enigma/Enigma.models";
-import type { MouseEvent } from "react";
+import type { MouseEvent, ReactNode } from "react";
 
 export interface SwapperProps<T extends Wiring> {
   limit?: number;
@@ -8,4 +8,5 @@ export interface SwapperProps<T extends Wiring> {
   lifo?: boolean;
   onRemoveWiring: (evt: MouseEvent<HTMLButtonElement>, wiring: T) => void;
   onAddWiring: (evt: MouseEvent<HTMLButtonElement>, wiring: T) => void;
+  children?: (wiring: T, index: number) => ReactNode;
 }

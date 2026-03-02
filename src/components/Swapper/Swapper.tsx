@@ -11,6 +11,7 @@ const Swapper = <T extends Wiring>({
   limit,
   forbidden,
   lifo,
+  children,
 }: SwapperProps<T>) => (
   <>
     {wirings.length > 0 && (
@@ -21,7 +22,9 @@ const Swapper = <T extends Wiring>({
               wiring={wiring}
               onRemoveWiring={onRemoveWiring}
               disabled={lifo === true && index < wirings.length - 1}
-            />
+            >
+              {children?.(wiring, index + 1)}
+            </SwapperWiring>
           </ListGroup.Item>
         ))}
       </ListGroup>

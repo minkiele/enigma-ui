@@ -1,5 +1,6 @@
 import type { Wiring } from "../../../Enigma/Enigma.models";
 import type { SwapperProps } from "../../Swapper.models";
+import type { ReactNode } from "react";
 
 export interface SwapperWiringProps<T extends Wiring> extends Pick<
   SwapperProps<T>,
@@ -7,4 +8,5 @@ export interface SwapperWiringProps<T extends Wiring> extends Pick<
 > {
   wiring: T;
   disabled?: boolean;
+  children?: ReactNode;
 }
