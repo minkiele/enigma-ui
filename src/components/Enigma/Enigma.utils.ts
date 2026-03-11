@@ -671,7 +671,7 @@ export const useEnigma = () => {
   const isLeftRotorValid = Boolean(state.leftRotor?.type);
   const isCenterRotorValid = Boolean(state.centerRotor?.type);
   const isRightRotorValid = Boolean(state.rightRotor?.type);
-  const isFourthRotorVisible =
+  const isFourthRotorEnabled =
     type === "M4" &&
     (state.reflector?.type == null ||
       thinReflectors.includes(state.reflector.type));
@@ -683,7 +683,7 @@ export const useEnigma = () => {
 
   const isMachineValid =
     isReflectorValid &&
-    (type === "M3" || isFourthRotorValid || !isFourthRotorVisible) &&
+    (type === "M3" || isFourthRotorValid || !isFourthRotorEnabled) &&
     isLeftRotorValid &&
     isCenterRotorValid &&
     isRightRotorValid &&
@@ -712,7 +712,7 @@ export const useEnigma = () => {
     isLeftRotorValid,
     isCenterRotorValid,
     isRightRotorValid,
-    isFourthRotorVisible,
+    isFourthRotorEnabled,
     isBackspaceEnabled,
   };
 
@@ -740,4 +740,3 @@ export const useEnigma = () => {
 
   return hookReturnValueWithActions;
 };
-
