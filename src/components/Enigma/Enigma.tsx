@@ -15,6 +15,7 @@ import {
 } from "../Keyboard/Keyboard.utils";
 import PlugBoard from "../PlugBoard/PlugBoard";
 import type { PlugBoardProps } from "../PlugBoard/PlugBoard.models";
+import Primer from "../Primer/Primer";
 import SwapperLabel, {
   UhrSwapperLabel,
 } from "../Swapper/components/SwapperLabel/SwapperLabel";
@@ -366,7 +367,7 @@ const Enigma: FC = () => {
           />
         </Card.Body>
       </Card>
-      <Row>
+      <Row className="mb-3">
         <Col md={6} className="mb-3 mb-md-0">
           <Card className="h-100">
             <Card.Header className="bg-info-subtle">Export</Card.Header>
@@ -394,6 +395,12 @@ const Enigma: FC = () => {
           </Card>
         </Col>
       </Row>
+      <Card ref={ref}>
+        <Card.Header className="bg-info-subtle">Primer</Card.Header>
+        <Card.Body>
+          <Primer onPrime={handleImport} />
+        </Card.Body>
+      </Card>
     </>
   );
 };
