@@ -15,4 +15,6 @@ const Rotor: FC<RotorProps> = ({ usedRotors, ...props }) => {
   return <BaseRotor {...props} options={options} />;
 };
 
+Rotor.displayName = "Rotor";
+
 export default Rotor;

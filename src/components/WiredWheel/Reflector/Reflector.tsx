@@ -53,4 +53,6 @@ const Reflector: FC<ReflectorProps> = ({
   );
 };
 
+Reflector.displayName = "Reflector";
+
 export default Reflector;

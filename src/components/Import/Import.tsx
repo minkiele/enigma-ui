@@ -58,4 +58,6 @@ const Import: FC<ImportProps> = ({ onImport }) => {
   );
 };
 
+Import.displayName = "Import";
+
 export default Import;

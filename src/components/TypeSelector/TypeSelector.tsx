@@ -19,4 +19,6 @@ const TypeSelector: FC<TypeSelectorProps> = ({ type, onChangeType }) => {
   );
 };
 
+TypeSelector.displayName = "TypeSelector";
+
 export default TypeSelector;

@@ -42,4 +42,6 @@ const Swapper = <T extends Wiring>({
   </>
 );
 
+Swapper.displayName = "Swapper";
+
 export default Swapper;

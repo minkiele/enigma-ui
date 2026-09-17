@@ -205,4 +205,6 @@ const Keyboard: FC<KeyboardProps> = ({
   );
 };
 
+Keyboard.displayName = "Keyboard";
+
 export default Keyboard;

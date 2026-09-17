@@ -54,4 +54,6 @@ const Uhr: FC<UhrProps> = ({
   );
 };
 
+Uhr.displayName = "Uhr";
+
 export default Uhr;

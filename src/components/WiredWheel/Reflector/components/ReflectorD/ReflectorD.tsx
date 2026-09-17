@@ -8,4 +8,6 @@ const ReflectorD: FC<ReflectorDProps> = (props) => (
   <Swapper {...props} limit={12} forbidden={REFLECTOR_D_FORBIDDEN} />
 );
 
+ReflectorD.displayName = "ReflectorD";
+
 export default ReflectorD;

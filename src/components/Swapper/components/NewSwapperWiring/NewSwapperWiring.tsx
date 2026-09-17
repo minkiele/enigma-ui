@@ -100,4 +100,6 @@ const NewSwapperWiring = <T extends Wiring>({
   );
 };
 
+NewSwapperWiring.displayName = "NewSwapperWiring";
+
 export default NewSwapperWiring;

@@ -7,4 +7,6 @@ const ThinRotor: FC<ThinRotorProps> = (props) => (
   <BaseRotor {...props} options={rotorTypes} />
 );
 
+ThinRotor.displayName = "ThinRotor";
+
 export default ThinRotor;

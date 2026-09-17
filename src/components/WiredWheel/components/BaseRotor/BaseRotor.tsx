@@ -73,4 +73,6 @@ const BaseRotor = <T extends RotorType | ThinRotorType>({
   );
 };
 
+BaseRotor.displayName = "BaseRotor";
+
 export default BaseRotor;

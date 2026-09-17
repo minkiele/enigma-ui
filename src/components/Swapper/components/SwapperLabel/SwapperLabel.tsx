@@ -22,4 +22,6 @@ export const UhrSwapperLabel: FC<SwapperLabelProps> = ({ wiring, index }) => (
   </div>
 );
 
+SwapperLabel.displayName = "SwapperLabel";
+
 export default SwapperLabel;

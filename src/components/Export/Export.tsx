@@ -30,4 +30,6 @@ const Export: FC<ExportProps> = ({ isMachineValid, ...exportableProps }) => {
   );
 };
 
+Export.displayName = "Export";
+
 export default Export;

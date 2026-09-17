@@ -29,4 +29,6 @@ const SwapperWiring = <T extends Wiring>({
   );
 };
 
+SwapperWiring.displayName = "SwapperWiring";
+
 export default SwapperWiring;

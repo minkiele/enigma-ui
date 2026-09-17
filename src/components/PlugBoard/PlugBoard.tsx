@@ -8,4 +8,6 @@ const PlugBoard: FC<PlugBoardProps> = (props) => (
   <Swapper {...props} limit={PLUGBOARD_MAX_SIZE} />
 );
 
+PlugBoard.displayName = "PlugBoard";
+
 export default PlugBoard;

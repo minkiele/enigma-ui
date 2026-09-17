@@ -420,4 +420,6 @@ const Enigma: FC = () => {
   );
 };
 
+Enigma.displayName = "Enigma";
+
 export default Enigma;
