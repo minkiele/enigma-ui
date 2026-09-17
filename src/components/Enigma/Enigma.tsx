@@ -171,6 +171,18 @@ const Enigma: FC = () => {
     scrollIntoView();
   };
 
+  const handleApplyKey:
+    | KeyboardProps["onApplyEncodeKey"]
+    | KeyboardProps["onApplyDecodeKey"] = (_, key) => {
+    const lcr = key.substring(key.length - 3);
+    if (type === "M4") {
+      setRotorWindowLetter("fourth", key.charAt(0));
+    }
+    setRotorWindowLetter("left", lcr.charAt(0));
+    setRotorWindowLetter("center", lcr.charAt(1));
+    setRotorWindowLetter("right", lcr.charAt(2));
+  };
+
   return (
     <>
       <Card className="mb-3">
@@ -356,6 +368,7 @@ const Enigma: FC = () => {
         <Card.Header className="bg-info-subtle">Keyboard</Card.Header>
         <Card.Body>
           <Keyboard
+            type={type}
             input={input}
             output={output}
             groupBy={type === "M3" ? DEFAULT_GROUP_BY_M3 : DEFAULT_GROUP_BY_M4}
@@ -364,6 +377,8 @@ const Enigma: FC = () => {
             onInput={handleInput}
             onBackspace={backspace}
             onReset={clear}
+            onApplyEncodeKey={handleApplyKey}
+            onApplyDecodeKey={handleApplyKey}
           />
         </Card.Body>
       </Card>

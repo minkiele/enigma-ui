@@ -18,9 +18,12 @@ const Keyboard: FC<KeyboardProps> = ({
   disabled,
   backspaceEnabled: isBackspaceEnabled,
   groupBy: propGroupBy,
+  type,
   onInput,
   onReset,
   onBackspace,
+  onApplyEncodeKey,
+  onApplyDecodeKey,
 }) => {
   const inputId = useId();
   const groupById = useId();
@@ -77,6 +80,18 @@ const Keyboard: FC<KeyboardProps> = ({
     setGroupBy((prev) => Math.max(prev - 1, 0));
   };
 
+  const isApplyKeyAvailable =
+    (type === "M3" && input.length === 3) ||
+    (type === "M4" && input.length === 4);
+
+  const handleApplyEncodeKey: MouseEventHandler<HTMLButtonElement> = (evt) => {
+    onApplyEncodeKey?.(evt, input);
+  };
+
+  const handleApplyDecodeKey: MouseEventHandler<HTMLButtonElement> = (evt) => {
+    onApplyDecodeKey?.(evt, output);
+  };
+
   return (
     <>
       <Row className="mb-3">
@@ -110,10 +125,26 @@ const Keyboard: FC<KeyboardProps> = ({
         <Col className="mb-3 mb-md-0" xs={12} md={4} lg={5}>
           <strong>Input:</strong>&nbsp;
           <code>{isGroupBy ? getGroupedLetters(input) : input}</code>
+          {isApplyKeyAvailable && onApplyEncodeKey && (
+            <>
+              {" "}
+              <Button size="sm" onClick={handleApplyEncodeKey}>
+                Apply as encoding key
+              </Button>
+            </>
+          )}
         </Col>
         <Col xs={12} md={4} lg={5}>
           <strong>Output:</strong>&nbsp;
           <code>{isGroupBy ? getGroupedLetters(output) : output}</code>
+          {isApplyKeyAvailable && onApplyDecodeKey && (
+            <>
+              {" "}
+              <Button size="sm" onClick={handleApplyDecodeKey}>
+                Apply as decoding key
+              </Button>
+            </>
+          )}
         </Col>
       </Row>
       <Row>
@@ -167,7 +198,6 @@ const Keyboard: FC<KeyboardProps> = ({
                 <ListGroup.Item>Restore disabled</ListGroup.Item>
               )}
             </ListGroup>
-            <div></div>
           </Col>
         )}
       </Row>
