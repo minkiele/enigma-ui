@@ -1,4 +1,3 @@
-import type { EnigmaType } from "../../models";
 import type {
   ChangeEvent,
   KeyboardEventHandler,
@@ -12,7 +11,7 @@ export interface KeyboardProps {
   groupBy: number;
   disabled?: boolean;
   backspaceEnabled?: boolean;
-  type: EnigmaType;
+  applyKeyLength?: number;
   onInput: (evt: ChangeEvent<HTMLInputElement>, input: string) => void;
   onBackspace: KeyboardEventHandler<HTMLInputElement>;
   onReset?: MouseEventHandler<HTMLButtonElement>;

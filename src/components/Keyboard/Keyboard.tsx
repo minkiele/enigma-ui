@@ -1,6 +1,7 @@
 import type { KeyboardProps } from "./Keyboard.models";
 import { normalizeInput } from "enigma-minkiele/enigma/lib/utils";
 import {
+  useCallback,
   useEffect,
   useId,
   useRef,
@@ -18,7 +19,7 @@ const Keyboard: FC<KeyboardProps> = ({
   disabled,
   backspaceEnabled: isBackspaceEnabled,
   groupBy: propGroupBy,
-  type,
+  applyKeyLength,
   onInput,
   onReset,
   onBackspace,
@@ -80,9 +81,7 @@ const Keyboard: FC<KeyboardProps> = ({
     setGroupBy((prev) => Math.max(prev - 1, 0));
   };
 
-  const isApplyKeyAvailable =
-    (type === "M3" && input.length === 3) ||
-    (type === "M4" && input.length === 4);
+  const isApplyKeyAvailable = applyKeyLength === input.length;
 
   const handleApplyEncodeKey: MouseEventHandler<HTMLButtonElement> = (evt) => {
     onApplyEncodeKey?.(evt, input);
@@ -91,6 +90,14 @@ const Keyboard: FC<KeyboardProps> = ({
   const handleApplyDecodeKey: MouseEventHandler<HTMLButtonElement> = (evt) => {
     onApplyDecodeKey?.(evt, output);
   };
+
+  const handleCopy = useCallback(
+    (value: string): MouseEventHandler<HTMLButtonElement> =>
+      () => {
+        navigator.clipboard.writeText(value);
+      },
+    [],
+  );
 
   return (
     <>
@@ -133,6 +140,18 @@ const Keyboard: FC<KeyboardProps> = ({
               </Button>
             </>
           )}
+          {input.length > 0 && (
+            <>
+              {" "}
+              <Button
+                size="sm"
+                onClick={handleCopy(input)}
+                aria-label="Copy input text"
+              >
+                ⚡️
+              </Button>
+            </>
+          )}
         </Col>
         <Col xs={12} md={4} lg={5}>
           <strong>Output:</strong>&nbsp;
@@ -142,6 +161,18 @@ const Keyboard: FC<KeyboardProps> = ({
               {" "}
               <Button size="sm" onClick={handleApplyDecodeKey}>
                 Apply as decoding key
+              </Button>
+            </>
+          )}
+          {output.length > 0 && (
+            <>
+              {" "}
+              <Button
+                size="sm"
+                onClick={handleCopy(output)}
+                aria-label="Copy output text"
+              >
+                ⚡️
               </Button>
             </>
           )}

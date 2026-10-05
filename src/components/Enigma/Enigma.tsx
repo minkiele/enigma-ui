@@ -72,6 +72,7 @@ const Enigma: FC = () => {
     backspace,
     isBackspaceEnabled,
     importSettings,
+    isM3Compatible,
   } = useEnigma();
 
   const handleChangeType: TypeSelectorProps["onChangeType"] = (_, type) => {
@@ -368,7 +369,7 @@ const Enigma: FC = () => {
         <Card.Header className="bg-info-subtle">Keyboard</Card.Header>
         <Card.Body>
           <Keyboard
-            type={type}
+            applyKeyLength={isM3Compatible ? 3 : 4}
             input={input}
             output={output}
             groupBy={type === "M3" ? DEFAULT_GROUP_BY_M3 : DEFAULT_GROUP_BY_M4}

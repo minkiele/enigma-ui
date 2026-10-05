@@ -681,9 +681,12 @@ export const useEnigma = () => {
     (state.reflector.type !== "D" || state.reflector.wirings.length === 12),
   );
 
+  const isM3Compatible =
+    type === "M3" || isFourthRotorValid || !isFourthRotorEnabled;
+
   const isMachineValid =
     isReflectorValid &&
-    (type === "M3" || isFourthRotorValid || !isFourthRotorEnabled) &&
+    isM3Compatible &&
     isLeftRotorValid &&
     isCenterRotorValid &&
     isRightRotorValid &&
@@ -714,6 +717,7 @@ export const useEnigma = () => {
     isRightRotorValid,
     isFourthRotorEnabled,
     isBackspaceEnabled,
+    isM3Compatible,
   };
 
   useDebugValue(hookReturnValue);
