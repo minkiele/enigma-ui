@@ -681,12 +681,11 @@ export const useEnigma = () => {
     (state.reflector.type !== "D" || state.reflector.wirings.length === 12),
   );
 
-  const isM3Compatible =
-    type === "M3" || isFourthRotorValid || !isFourthRotorEnabled;
+  const isM3Compatible = type === "M3" || !isFourthRotorEnabled;
 
   const isMachineValid =
     isReflectorValid &&
-    isM3Compatible &&
+    (isM3Compatible || isFourthRotorValid) &&
     isLeftRotorValid &&
     isCenterRotorValid &&
     isRightRotorValid &&

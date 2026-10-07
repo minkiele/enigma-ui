@@ -10,6 +10,8 @@ import type { ImportProps } from "../Import/Import.models";
 import Keyboard from "../Keyboard/Keyboard";
 import type { KeyboardProps } from "../Keyboard/Keyboard.models";
 import {
+  APPLY_KEY_LENGTH_M3,
+  APPLY_KEY_LENGTH_M4,
   DEFAULT_GROUP_BY_M3,
   DEFAULT_GROUP_BY_M4,
 } from "../Keyboard/Keyboard.utils";
@@ -369,7 +371,9 @@ const Enigma: FC = () => {
         <Card.Header className="bg-info-subtle">Keyboard</Card.Header>
         <Card.Body>
           <Keyboard
-            applyKeyLength={isM3Compatible ? 3 : 4}
+            applyKeyLength={
+              isM3Compatible ? APPLY_KEY_LENGTH_M3 : APPLY_KEY_LENGTH_M4
+            }
             input={input}
             output={output}
             groupBy={type === "M3" ? DEFAULT_GROUP_BY_M3 : DEFAULT_GROUP_BY_M4}
